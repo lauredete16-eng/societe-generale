@@ -3,17 +3,15 @@ import { Loader2, ChevronRight, ChevronDown, ChevronUp, Star, Shield, FileText, 
 import { useAuth } from "../context/AuthContext";
 
 export default function CartesPage() {
-  const { currentUser } = useAuth(); // ✅ Récupérer l'utilisateur du Context
+  const { currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [carteActive, setCarteActive] = useState(true);
   const [optionsOpen, setOptionsOpen] = useState(false);
 
-  // Formater le nom pour l'affichage sur la carte (NOM PRÉNOM en majuscules)
   const formatCardName = (fullName) => {
     if (!fullName) return "NOM UTILISATEUR";
     const parts = fullName.trim().split(" ");
     if (parts.length >= 2) {
-      // Si format "Nom Prénom" → "NOM PRÉNOM"
       return `${parts[0].toUpperCase()} ${parts[1].toUpperCase()}`;
     }
     return fullName.toUpperCase();
@@ -48,78 +46,72 @@ export default function CartesPage() {
         <p className="text-white mt-1">Débit immédiat</p>
       </div>
 
+      {/* CARTE BANCAIRE */}
       <div className="relative z-20 -mt-20 sm:-mt-28 max-w-sm mx-auto w-full px-4 mb-6">
-        <div className="rounded-xl p-5 sm:p-6 text-white shadow-xl relative overflow-hidden aspect-[1.586/1] bg-pink-900">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-10 right-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-            <div className="absolute bottom-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>
+        <div className="relative rounded-xl shadow-2xl overflow-hidden aspect-[1.586/1]">
+          {/* Image de fond de la carte */}
+          <img 
+            src="/images/logo carte.jpg" 
+            alt="Carte bancaire"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          {/* Numéro de carte */}
+          <div 
+            className="font-mono absolute"
+            style={{
+              bottom: '25%',
+              left: '6%',
+              fontSize: '1.1rem',
+              fontWeight: '500',
+              color: '#FFFFFF',
+              letterSpacing: '0.15em',
+              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+            }}
+          >
+            •••• •••• •••• {currentUser?.carte}
           </div>
 
-          <div className="relative z-10 h-full flex flex-col justify-between">
-            <div className="flex justify-between items-start -mt-1">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 border-white rounded-sm flex flex-col overflow-hidden relative">
-                  <div className="w-full flex-1 bg-red-600"></div>
-                  <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-white transform -translate-y-1/2 z-10"></div>
-                  <div className="w-full flex-1 bg-black"></div>
-                </div>
-                <div className="text-sm sm:text-base font-semibold text-gray-100 leading-tight tracking-wide">
-                  <div>SOCIETE</div>
-                  <div>GENERALE</div>
-                </div>
-              </div>
+          {/* Date d'expiration */}
+          <div
+            className="absolute font-mono"
+            style={{
+              bottom: '5%',
+              left: '65%',
+              transform: 'translateX(-50%)',
+              fontSize: '0.85rem',
+              fontWeight: '600',
+              color: '#FFFFFF',
+              textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '2px'
+            }}
+          >
+            <span style={{ fontSize: '0.5rem', letterSpacing: '0.1em' }}>EXP</span>
+            <span>{currentUser?.exp}</span>
+          </div>
 
-              <div className="border-2 border-white rounded-sm px-2 py-1" style={{ background: "rgba(92, 58, 94, 0.6)" }}>
-                <div className="flex items-center gap-0" style={{ width: "28px", height: "16px" }}>
-                  <svg width="28" height="16" viewBox="0 0 28 16" fill="none" className="w-full h-full">
-                    <path d="M11 2 A6 6 0 1 0 11 14" stroke="white" strokeWidth="8" fill="none" />
-                    <rect x="15" y="1" width="12" height="6.5" rx="1.5" fill="white" />
-                    <rect x="15" y="8.5" width="12" height="6.5" rx="1.5" fill="white" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 my-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="sm:w-6 sm:h-6">
-                  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" stroke="#5c3a5e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="7.5" cy="10" r="1" fill="#5c3a5e"/>
-                  <circle cx="12" cy="7.5" r="1" fill="#5c3a5e"/>
-                  <circle cx="16" cy="10" r="1" fill="#5c3a5e"/>
-                  <circle cx="9.5" cy="13.5" r="1" fill="#5c3a5e"/>
-                  <path d="M18 4l2-2m0 0l1 1m-1-1l-3 3" stroke="#5c3a5e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <line x1="19" y1="5" x2="16.5" y2="7.5" stroke="#5c3a5e" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-            </div>
-
-            <div className="text-lg sm:text-xl tracking-widest sm:tracking-widest font-mono mb-auto drop-shadow-md font-semibold">
-              •••• •••• •••• {currentUser?.carte || "4298"}
-            </div>
-
-            <div className="flex justify-between items-end gap-3 mt-auto">
-              <div className="flex-1">
-                <p className="text-[10px] sm:text-xs font-bold uppercase drop-shadow-md leading-tight whitespace-nowrap overflow-hidden">
-                  {formatCardName(currentUser?.nom)}
-                </p>
-              </div>
-              
-              <div className="text-center flex-shrink-0">
-                <p className="text-[10px] font-medium leading-none mb-1 drop-shadow-md opacity-80">EXP</p>
-                <p className="text-xs font-bold leading-none drop-shadow-md">{currentUser?.exp || "12/25"}</p>
-              </div>
-              
-              <div className="flex-1 text-right">
-                <span className="text-2xl sm:text-3xl font-black italic text-white block drop-shadow-lg" style={{ fontFamily: "sans-serif", letterSpacing: "-0.02em", lineHeight: "1" }}>
-                  VISA
-                </span>
-              </div>
-            </div>
+          {/* Nom du titulaire */}
+          <div
+            className="uppercase absolute"
+            style={{
+              bottom: '12%',
+              left: '6%',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              color: '#FFFFFF',
+              letterSpacing: '0.05em',
+              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+            }}
+          >
+            {formatCardName(currentUser?.nom)}
           </div>
         </div>
       </div>
 
+      {/* RESTE DU CONTENU */}
       <div className="flex-1 px-4 py-2 max-w-4xl mx-auto w-full">
         <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-6">
           <button className="flex items-center justify-center gap-2 bg-white text-red-600 font-semibold py-2 px-4 rounded-md shadow hover:bg-gray-100 transition">

@@ -70,17 +70,12 @@ export default function LoginScreen() {
 
      {/* HEADER AVEC LOGO */}
        <div className="bg-white border-b border-gray-200 py-3 px-4">
-          <div className="max-w-xl mx-auto">
-            <div className="w-12 h-12 mx-auto relative">
-              <div className="w-full h-full rounded-sm flex flex-col overflow-hidden">
-                {/* Partie rouge en haut */}
-                <div className="w-full h-1/2 bg-red-600"></div>
-                {/* Partie noire en bas */}
-                <div className="w-full h-1/2 bg-gray-900"></div>
-              </div>
-              {/* Tiret blanc au milieu (positionné absolument) */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-0.5 bg-white"></div>
-            </div>
+          <div className="max-w-xl mx-auto flex justify-center">
+            <img 
+              src="images/logo sg.jpg" 
+              alt="Société Générale" 
+              className="h-12 object-contain"
+            />
           </div>
      </div>
 
@@ -108,7 +103,7 @@ export default function LoginScreen() {
                     maxLength="8"
                     disabled={isLoading}
                   />
-                  {loginCode && loginCode.length >= 6 && (
+                  {loginCode && loginCode.length >= 8 && (
                     <Check size={24} className="absolute right-0 top-1/2 -translate-y-1/2 text-green-600" />
                   )}
                 </div>

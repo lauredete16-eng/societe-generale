@@ -144,10 +144,11 @@ export default function VirementPage() {
     return (
       <div className="min-h-screen bg-white flex flex-col">
         <div className="fixed top-0 left-0 right-0 bg-gray-100 py-3 flex justify-center border-b z-50">
-          <div className="w-12 h-12 rounded-lg flex items-center justify-center relative overflow-hidden border-4 border-black">
-            <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, #dc2626 0%, #dc2626 50%, #000000 50%, #000000 100%)'}}></div>
-            <div className="w-6 h-0.5 bg-white absolute" style={{top: '50%', transform: 'translateY(-50%)'}}></div>
-          </div>
+          <img 
+            src="images/logo sg.jpg" 
+            alt="Société Générale" 
+            className="h-12 object-contain"
+          />
         </div>
 
         <div className="pt-20 px-4 py-6">
@@ -174,10 +175,11 @@ export default function VirementPage() {
             
             <div className="hidden md:block w-12"></div>
             
-            <div className="w-12 h-12 rounded-lg flex items-center justify-center relative overflow-hidden border-4 border-black">
-              <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, #dc2626 0%, #dc2626 50%, #000000 50%, #000000 100%)'}}></div>
-              <div className="w-6 h-0.5 bg-white absolute" style={{top: '50%', transform: 'translateY(-50%)'}}></div>
-            </div>
+            <img 
+              src="images/logo sg.jpg" 
+              alt="Société Générale" 
+              className="h-12 object-contain"
+            />
             
             <button 
               onClick={handleLogout}
@@ -323,10 +325,11 @@ export default function VirementPage() {
     return (
       <div className="min-h-screen bg-white">
         <div className="fixed top-0 left-0 right-0 bg-gray-100 py-3 flex justify-center border-b z-50">
-          <div className="w-12 h-12 rounded-lg flex items-center justify-center relative overflow-hidden border-4 border-black">
-            <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, #dc2626 0%, #dc2626 50%, #000000 50%, #000000 100%)'}}></div>
-            <div className="w-6 h-0.5 bg-white absolute" style={{top: '50%', transform: 'translateY(-50%)'}}></div>
-          </div>
+          <img 
+            src="images/logo sg.jpg" 
+            alt="Société Générale" 
+            className="h-12 object-contain"
+          />
         </div>
 
         <div className="pt-20 flex flex-col max-w-xl mx-auto w-full px-4 py-5">
@@ -407,10 +410,11 @@ export default function VirementPage() {
     return (
       <div className="min-h-screen bg-white">
         <div className="fixed top-0 left-0 right-0 bg-gray-100 py-3 flex justify-center border-b z-50">
-          <div className="w-12 h-12 rounded-lg flex items-center justify-center relative overflow-hidden border-4 border-black">
-            <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, #dc2626 0%, #dc2626 50%, #000000 50%, #000000 100%)'}}></div>
-            <div className="w-6 h-0.5 bg-white absolute" style={{top: '50%', transform: 'translateY(-50%)'}}></div>
-          </div>
+          <img 
+            src="images/logo sg.jpg" 
+            alt="Société Générale" 
+            className="h-12 object-contain"
+          />
         </div>
 
         <div className="pt-20 max-w-xl mx-auto px-4 py-5">
@@ -461,10 +465,11 @@ export default function VirementPage() {
     return (
       <div className="min-h-screen bg-white">
         <div className="fixed top-0 left-0 right-0 bg-gray-100 py-3 flex justify-center border-b z-50">
-          <div className="w-12 h-12 rounded-lg flex items-center justify-center relative overflow-hidden border-4 border-black">
-            <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, #dc2626 0%, #dc2626 50%, #000000 50%, #000000 100%)'}}></div>
-            <div className="w-6 h-0.5 bg-white absolute" style={{top: '50%', transform: 'translateY(-50%)'}}></div>
-          </div>
+          <img 
+            src="images/logo sg.jpg" 
+            alt="Société Générale" 
+            className="h-12 object-contain"
+          />
         </div>
 
         <div className="pt-20 flex items-center justify-center p-4">

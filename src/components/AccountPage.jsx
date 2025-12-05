@@ -62,11 +62,11 @@ export default function AccountPage() {
 
           {/* Logo centré */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
-            <div className="w-9 h-9 border-2 border-black rounded-sm flex flex-col overflow-hidden relative">
-              <div className="w-full flex-1 bg-red-600"></div>
-              <div className="absolute top-1/2 left-1/5 right-1/5 h-0.5 bg-white transform -translate-y-1/2 z-10"></div>
-              <div className="w-full flex-1 bg-black"></div>
-            </div>
+            <img 
+              src="images/logo sg.jpg" 
+              alt="Société Générale" 
+              className="h-9 object-contain"
+            />
           </div>
 
           {/* Bouton déconnexion */}
@@ -187,11 +187,11 @@ export default function AccountPage() {
         <div className="bg-gray-100 py-6 w-full">
           <div className="max-w-5xl mx-auto px-4 flex flex-col items-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-9 h-9 border-2 border-black rounded-sm flex flex-col overflow-hidden relative">
-                <div className="w-full flex-1 bg-red-600"></div>
-                <div className="absolute top-1/2 left-1/5 right-1/5 h-0.5 bg-white transform -translate-y-1/2 z-10"></div>
-                <div className="w-full flex-1 bg-black"></div>
-              </div>
+              <img 
+                src="images/logo sg.jpg" 
+                alt="Société Générale" 
+                className="h-9 object-contain"
+              />
               <div className="text-left">
                 <div className="text-lg font-bold text-black leading-tight">SOCIETE</div>
                 <div className="text-lg font-bold text-black leading-tight">GENERALE</div>
