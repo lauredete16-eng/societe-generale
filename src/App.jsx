@@ -102,10 +102,6 @@ function AppRoutes() {
         element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />} 
       />
       
-      <Route 
-        path="*" 
-        element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />} 
-      />
     </Routes>
   );
 }
