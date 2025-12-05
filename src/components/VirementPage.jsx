@@ -48,7 +48,7 @@ export default function VirementPage() {
     setTimeout(() => {
       setCurrentPage(page);
       setNextPage(null);
-    }, 2000);
+    }, 1500);
   };
 
   const deleteBeneficiary = (id, e) => {
@@ -143,18 +143,18 @@ export default function VirementPage() {
   if (currentPage === 'loading') {
     return (
       <div className="min-h-screen bg-white flex flex-col">
-        <div className="fixed top-0 left-0 right-0 bg-gray-100 py-4 flex justify-center border-b z-50">
-          <div className="w-14 h-14 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
-            <div className="w-7 h-0.5 bg-white"></div>
+        <div className="fixed top-0 left-0 right-0 bg-gray-100 py-3 flex justify-center border-b z-50">
+          <div className="w-12 h-12 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
+            <div className="w-6 h-0.5 bg-white"></div>
           </div>
         </div>
 
-        <div className="pt-24 px-6 py-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-12">Virement & Bénéficiaires</h2>
+        <div className="pt-20 px-4 py-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-10">Virement & Bénéficiaires</h2>
           
-          <div className="flex flex-col items-center justify-center mt-32">
-            <Loader className="w-24 h-24 text-gray-800 animate-spin mb-8" />
-            <p className="text-xl text-gray-700">Un instant ...</p>
+          <div className="flex flex-col items-center justify-center mt-28">
+            <Loader className="w-20 h-20 text-gray-800 animate-spin mb-6" />
+            <p className="text-lg text-gray-700">Un instant ...</p>
           </div>
         </div>
       </div>
@@ -165,90 +165,90 @@ export default function VirementPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
-          <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <button className="md:hidden flex flex-col items-center gap-1">
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5" />
               <span className="text-xs font-semibold">MENU</span>
             </button>
             
-            <div className="hidden md:block w-14"></div>
+            <div className="hidden md:block w-12"></div>
             
-            <div className="w-14 h-14 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
-              <div className="w-7 h-0.5 bg-white"></div>
+            <div className="w-12 h-12 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
+              <div className="w-6 h-0.5 bg-white"></div>
             </div>
             
             <button 
               onClick={handleLogout}
-              className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-500 transition"
+              className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-500 transition"
             >
-              <Power className="w-8 h-8 text-white" />
+              <Power className="w-7 h-7 text-white" />
             </button>
           </div>
         </header>
 
-        <main className="max-w-6xl mx-auto px-4 py-8 pt-28">
-          <h1 className="text-3xl font-bold mb-8">Faire un virement</h1>
+        <main className="max-w-5xl mx-auto px-4 py-6 pt-20">
+          <h1 className="text-2xl font-bold mb-6">Faire un virement</h1>
 
-          <div className="bg-white py-6 px-4 mb-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-center">VIREMENTS INTERNATIONAUX</h2>
+          <div className="bg-white py-5 px-4 mb-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-center">VIREMENTS INTERNATIONAUX</h2>
           </div>
 
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">Depuis quel compte ?</h3>
-            <div className="bg-white border-l-4 border-teal-500 shadow-sm p-4 flex items-center justify-between">
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-3">Depuis quel compte ?</h3>
+            <div className="bg-white border-l-4 border-teal-500 shadow-sm p-3 flex items-center justify-between">
               <div>
-                <div className="font-semibold mb-1">Compte</div>
-                <div className="text-gray-600 text-sm">FR76 3000 3015 8100 0501 3952 794</div>
+                <div className="font-semibold mb-1 text-sm">Compte</div>
+                <div className="text-gray-600 text-xs">FR76 3000 3015 8100 0501 3952 794</div>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="text-xl font-semibold">1 308 250 EUR</span>
-                <ChevronDown className="w-6 h-6" />
+              <div className="flex items-center gap-3">
+                <span className="text-lg font-semibold">1 308 250 EUR</span>
+                <ChevronDown className="w-5 h-5" />
               </div>
             </div>
           </div>
 
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">Vers quel bénéficiaire ?</h3>
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-3">Vers quel bénéficiaire ?</h3>
             
             <div className="bg-white shadow-sm">
               <button 
                 onClick={() => setShowBeneficiaries(!showBeneficiaries)}
-                className="w-full p-4 flex items-center justify-end border-b"
+                className="w-full p-3 flex items-center justify-end border-b"
               >
-                {showBeneficiaries ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
+                {showBeneficiaries ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
               </button>
 
               {showBeneficiaries && (
                 <div className="p-4">
                   <button 
                     onClick={() => showLoadingThenNavigate('addBeneficiary')}
-                    className="flex items-center gap-3 text-red-500 font-semibold mb-6 hover:text-red-600"
+                    className="flex items-center gap-2 text-red-500 font-semibold mb-5 hover:text-red-600 text-sm"
                   >
-                    <Plus className="w-6 h-6" />
+                    <Plus className="w-5 h-5" />
                     <span>Ajouter un bénéficiaire</span>
                   </button>
 
-                  <div className="mb-4">
-                    <span className="font-semibold">BÉNÉFICIAIRE</span>                   
-                    <span className="font-semibold"> ZONE SEPA DONT FRANCE</span>
+                  <div className="mb-3">
+                    <span className="font-semibold text-sm">BÉNÉFICIAIRE</span>                   
+                    <span className="font-semibold text-sm"> ZONE SEPA DONT FRANCE</span>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {beneficiaries.map((beneficiary) => (
                       <div 
                         key={beneficiary.id}
                         onClick={() => handleSelectBeneficiary(beneficiary)}
-                        className="border border-gray-300 rounded p-4 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
+                        className="border border-gray-300 rounded p-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
                       >
                         <div>
-                          <div className="font-semibold mb-1">{beneficiary.prenom} {beneficiary.nom}</div>
-                          <div className="text-gray-600 text-sm">{beneficiary.iban}</div>
+                          <div className="font-semibold mb-1 text-sm">{beneficiary.prenom} {beneficiary.nom}</div>
+                          <div className="text-gray-600 text-xs">{beneficiary.iban}</div>
                         </div>
                         <button 
                           onClick={(e) => deleteBeneficiary(beneficiary.id, e)}
                           className="text-gray-400 hover:text-red-500"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
@@ -261,13 +261,13 @@ export default function VirementPage() {
           {/* SECTION HISTORIQUE */}
           {historique.length > 0 && (
             <div>
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <History className="w-6 h-6" />
+              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                <History className="w-5 h-5" />
                 Historique des virements
               </h3>
               
               <div className="bg-white shadow-sm p-4">
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {historique.map((transaction) => {
                     const joursRestants = calculerJoursRestants(transaction.dateCreation);
                     const estTraite = joursRestants === 0;
@@ -275,14 +275,14 @@ export default function VirementPage() {
                     return (
                       <div 
                         key={transaction.id}
-                        className="border border-gray-300 rounded-lg p-4"
+                        className="border border-gray-300 rounded-lg p-3"
                       >
-                        <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
-                            <div className="font-semibold text-lg mb-1">
+                            <div className="font-semibold text-base mb-1">
                               {transaction.beneficiaire.prenom} {transaction.beneficiaire.nom}
                             </div>
-                            <div className="text-gray-600 text-sm mb-1">
+                            <div className="text-gray-600 text-xs mb-1">
                               {transaction.beneficiaire.iban}
                             </div>
                             <div className="text-gray-500 text-xs">
@@ -290,17 +290,17 @@ export default function VirementPage() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="font-bold text-2xl text-emerald-600 mb-2">
+                            <div className="font-bold text-xl text-emerald-600 mb-2">
                               {transaction.montant} €
                             </div>
                             {estTraite ? (
-                              <div className="flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
-                                <CheckCircle className="w-4 h-4" />
+                              <div className="flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">
+                                <CheckCircle className="w-3 h-3" />
                                 <span>Traité</span>
                               </div>
                             ) : (
-                              <div className="flex items-center gap-2 bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-semibold">
-                                <Clock className="w-4 h-4" />
+                              <div className="flex items-center gap-1 bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-xs font-semibold">
+                                <Clock className="w-3 h-3" />
                                 <span>En attente ({joursRestants}j)</span>
                               </div>
                             )}
@@ -321,77 +321,77 @@ export default function VirementPage() {
   if (currentPage === 'addBeneficiary') {
     return (
       <div className="min-h-screen bg-white">
-        <div className="fixed top-0 left-0 right-0 bg-gray-100 py-4 flex justify-center border-b z-50">
-          <div className="w-14 h-14 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
-            <div className="w-7 h-0.5 bg-white"></div>
+        <div className="fixed top-0 left-0 right-0 bg-gray-100 py-3 flex justify-center border-b z-50">
+          <div className="w-12 h-12 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
+            <div className="w-6 h-0.5 bg-white"></div>
           </div>
         </div>
 
-        <div className="pt-24 flex flex-col max-w-2xl mx-auto w-full px-6 py-6">
-          <h2 className="text-center text-xl font-bold text-gray-900 mb-4 tracking-wide">
+        <div className="pt-20 flex flex-col max-w-xl mx-auto w-full px-4 py-5">
+          <h2 className="text-center text-lg font-bold text-gray-900 mb-3 tracking-wide">
             AJOUT NOUVEAU BÉNÉFICIAIRE
           </h2>
 
-          <h1 className="text-2xl font-normal text-gray-900 mb-8 text-center leading-tight">
+          <h1 className="text-xl font-normal text-gray-900 mb-6 text-center leading-tight">
             Confirmez les informations du nouveau bénéficiaires.
           </h1>
 
-          <div className="space-y-5">
+          <div className="space-y-4">
             <div>
-              <label className="block text-gray-700 text-base mb-2">Nom</label>
+              <label className="block text-gray-700 text-sm mb-2">Nom</label>
               <input 
                 type="text" 
                 value={newBeneficiary.nom}
                 onChange={(e) => setNewBeneficiary({...newBeneficiary, nom: e.target.value})}
-                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-base" 
+                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-sm" 
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 text-base mb-2">Prénom</label>
+              <label className="block text-gray-700 text-sm mb-2">Prénom</label>
               <input 
                 type="text" 
                 value={newBeneficiary.prenom}
                 onChange={(e) => setNewBeneficiary({...newBeneficiary, prenom: e.target.value})}
-                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-base" 
+                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-sm" 
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 text-base mb-2">Iban</label>
+              <label className="block text-gray-700 text-sm mb-2">Iban</label>
               <input 
                 type="text" 
                 value={newBeneficiary.iban}
                 onChange={(e) => setNewBeneficiary({...newBeneficiary, iban: e.target.value})}
-                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-base" 
+                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-sm" 
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 text-base mb-2">Email</label>
+              <label className="block text-gray-700 text-sm mb-2">Email</label>
               <input 
                 type="email" 
                 value={newBeneficiary.email}
                 onChange={(e) => setNewBeneficiary({...newBeneficiary, email: e.target.value})}
-                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-base" 
+                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-sm" 
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 text-base mb-2">Bic</label>
+              <label className="block text-gray-700 text-sm mb-2">Bic</label>
               <input 
                 type="text" 
                 value={newBeneficiary.bic}
                 onChange={(e) => setNewBeneficiary({...newBeneficiary, bic: e.target.value})}
-                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-base" 
+                className="w-full px-0 py-2 border-0 border-b-2 border-gray-400 focus:border-gray-900 focus:outline-none bg-transparent text-sm" 
               />
             </div>
           </div>
 
-          <div className="mt-8 mb-6">
+          <div className="mt-6 mb-5">
             <button 
               onClick={handleAddBeneficiary}
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-4 rounded-full text-lg shadow-lg"
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-full text-base shadow-lg"
             >
               Confirmer
             </button>
@@ -404,35 +404,35 @@ export default function VirementPage() {
   if (currentPage === 'amount') {
     return (
       <div className="min-h-screen bg-white">
-        <div className="fixed top-0 left-0 right-0 bg-gray-100 py-4 flex justify-center border-b z-50">
-          <div className="w-14 h-14 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
-            <div className="w-7 h-0.5 bg-white"></div>
+        <div className="fixed top-0 left-0 right-0 bg-gray-100 py-3 flex justify-center border-b z-50">
+          <div className="w-12 h-12 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
+            <div className="w-6 h-0.5 bg-white"></div>
           </div>
         </div>
 
-        <div className="pt-24 max-w-2xl mx-auto px-6 py-6">
-          <div className="bg-white rounded-3xl shadow-2xl p-8">
+        <div className="pt-20 max-w-xl mx-auto px-4 py-5">
+          <div className="bg-white rounded-3xl shadow-2xl p-6">
             <div>
-              <div className="text-sm text-gray-600 font-semibold">VIREMENT INSTANTANÉ</div>
-              <h1 className="text-3xl font-bold text-gray-900 mt-2">Veuillez saisir le montant pour le virement</h1>
+              <div className="text-xs text-gray-600 font-semibold">VIREMENT INSTANTANÉ</div>
+              <h1 className="text-2xl font-bold text-gray-900 mt-2">Veuillez saisir le montant pour le virement</h1>
             </div>
 
             {selectedBeneficiary && (
-              <div className="bg-gray-100 rounded-xl p-4 mb-6 mt-6">
-                <div className="text-sm text-gray-600 mb-1">Bénéficiaire</div>
-                <div className="font-semibold text-lg">{selectedBeneficiary.prenom} {selectedBeneficiary.nom}</div>
-                <div className="text-sm text-gray-600">{selectedBeneficiary.iban}</div>
+              <div className="bg-gray-100 rounded-xl p-3 mb-5 mt-5">
+                <div className="text-xs text-gray-600 mb-1">Bénéficiaire</div>
+                <div className="font-semibold text-base">{selectedBeneficiary.prenom} {selectedBeneficiary.nom}</div>
+                <div className="text-xs text-gray-600">{selectedBeneficiary.iban}</div>
               </div>
             )}
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">Montant du virement (€)</label>
+                <label className="block text-gray-700 font-semibold mb-2 text-sm">Montant du virement (€)</label>
                 <input 
                   type="number" 
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-emerald-500 focus:outline-none text-2xl font-semibold" 
+                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-xl focus:border-emerald-500 focus:outline-none text-xl font-semibold" 
                   placeholder="0.00" 
                   step="0.01"
                   min="0"
@@ -441,7 +441,7 @@ export default function VirementPage() {
 
               <button 
                 onClick={handleConfirmAmount}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl mt-4"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl mt-3 text-sm"
               >
                 Confirmer le virement
               </button>
@@ -457,35 +457,35 @@ export default function VirementPage() {
     
     return (
       <div className="min-h-screen bg-white">
-        <div className="fixed top-0 left-0 right-0 bg-gray-100 py-4 flex justify-center border-b z-50">
-          <div className="w-14 h-14 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
-            <div className="w-7 h-0.5 bg-white"></div>
+        <div className="fixed top-0 left-0 right-0 bg-gray-100 py-3 flex justify-center border-b z-50">
+          <div className="w-12 h-12 bg-gradient-to-b from-red-500 to-black rounded-sm flex items-center justify-center">
+            <div className="w-6 h-0.5 bg-white"></div>
           </div>
         </div>
 
-        <div className="pt-24 flex items-center justify-center p-4">
-          <div className="max-w-2xl w-full mx-auto bg-white rounded-3xl shadow-2xl p-8 text-center">
-            <div className="flex justify-center mb-6">
-              <CheckCircle className="w-24 h-24 text-emerald-600" />
+        <div className="pt-20 flex items-center justify-center p-4">
+          <div className="max-w-xl w-full mx-auto bg-white rounded-3xl shadow-2xl p-6 text-center">
+            <div className="flex justify-center mb-5">
+              <CheckCircle className="w-20 h-20 text-emerald-600" />
             </div>
             
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Virement effectué avec succès</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-3">Virement effectué avec succès</h1>
             
-            <div className="bg-gray-100 rounded-xl p-6 mb-6 text-left">
-              <div className="mb-4">
-                <div className="text-sm text-gray-600 mb-1">Bénéficiaire</div>
-                <div className="font-semibold text-lg">{selectedBeneficiary?.prenom} {selectedBeneficiary?.nom}</div>
-                <div className="text-sm text-gray-600">{selectedBeneficiary?.iban}</div>
+            <div className="bg-gray-100 rounded-xl p-5 mb-5 text-left">
+              <div className="mb-3">
+                <div className="text-xs text-gray-600 mb-1">Bénéficiaire</div>
+                <div className="font-semibold text-base">{selectedBeneficiary?.prenom} {selectedBeneficiary?.nom}</div>
+                <div className="text-xs text-gray-600">{selectedBeneficiary?.iban}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600 mb-1">Montant</div>
-                <div className="font-bold text-3xl text-emerald-600">{parseFloat(amount).toFixed(2)} €</div>
+                <div className="text-xs text-gray-600 mb-1">Montant</div>
+                <div className="font-bold text-2xl text-emerald-600">{parseFloat(amount).toFixed(2)} €</div>
               </div>
             </div>
 
             <button 
               onClick={handleBackToList}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm"
             >
               Retour à l'accueil
             </button>

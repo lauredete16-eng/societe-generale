@@ -54,7 +54,7 @@ export default function CartesPage({ currentUser }) {
       {/* Carte bancaire chevauche header et bg gris */}
       <div className="relative z-20 -mt-20 sm:-mt-28 max-w-sm mx-auto w-full px-4">
         <div
-          className="rounded-xl p-4 sm:p-5 text-white shadow-xl relative overflow-hidden aspect-[1.586/1] bg-pink-900"
+          className="rounded-xl p-3 sm:p-5 text-white shadow-xl relative overflow-hidden aspect-[1.586/1] bg-pink-900"
         >
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-10 right-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
@@ -120,22 +120,22 @@ export default function CartesPage({ currentUser }) {
             </div>
 
             {/* Numéro de carte */}
-            <div className="text-sm sm:text-base tracking-widest font-mono">
+            <div className="text-xs sm:text-base tracking-widest font-mono">
               •••• •••• •••• {currentUser?.carte || "4298"}
             </div>
 
             {/* Bas de la carte */}
-            <div className="flex justify-between items-end">
-              <div>
-                <p className="text-xs sm:text-sm font-semibold mb-1">{currentUser?.nom || ""}</p>
+            <div className="flex justify-between items-end gap-1">
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] sm:text-sm font-semibold truncate">{currentUser?.nom || ""}</p>
               </div>
-              <div className="text-center">
-                <p className="text-[9px] sm:text-[10px] opacity-75">EXP</p>
-                <p className="text-[11px] sm:text-xs font-semibold">12/25</p>
+              <div className="text-center flex-shrink-0">
+                <p className="text-[8px] sm:text-[10px] opacity-75 leading-tight">EXP</p>
+                <p className="text-[10px] sm:text-xs font-semibold">12/25</p>
               </div>
-              <div className="rounded px-2 py-1">
+              <div className="rounded px-1.5 py-0.5 sm:px-2 sm:py-1 flex-shrink-0">
                 <span
-                  className="text-lg sm:text-xl font-semibold tracking-wide text-white"
+                  className="text-base sm:text-xl font-semibold tracking-wide text-white"
                   style={{ 
                     fontFamily: "sans-serif", 
                     fontWeight: 900,
