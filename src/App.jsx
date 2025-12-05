@@ -97,10 +97,7 @@ function AppRoutes() {
         }
       />
 
-      <Route 
-        path="/" 
-        element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />} 
-      />
+      
       
     </Routes>
   );
