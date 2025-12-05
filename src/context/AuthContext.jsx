@@ -44,6 +44,10 @@ export function AuthProvider({ children }) {
     
     // Supprimer de localStorage
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("savedLoginCode");
+    
+    // ✅ AJOUT : Redirection forcée
+    window.location.href = "/";
   };
 
   return (
