@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
         setIsLoggedIn(true);
       } catch (error) {
         console.error("Erreur lors de la restauration de la session", error);
-        localStorage.removeItem("currentUser");
+        localStorage.removeItem("currentUser"); 
       }
     }
     setLoading(false);

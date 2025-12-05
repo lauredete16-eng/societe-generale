@@ -10,7 +10,6 @@ import {
   FileText,
   Edit,
   Lock,
-  Palette,
 } from "lucide-react";
 
 export default function CartesPage({ currentUser }) {
@@ -54,14 +53,14 @@ export default function CartesPage({ currentUser }) {
       {/* Carte bancaire chevauche header et bg gris */}
       <div className="relative z-20 -mt-20 sm:-mt-28 max-w-sm mx-auto w-full px-4">
         <div
-          className="rounded-xl p-3 sm:p-5 text-white shadow-xl relative overflow-hidden aspect-[1.586/1] bg-pink-900"
+          className="rounded-xl p-4 sm:p-5 text-white shadow-xl relative overflow-hidden aspect-[1.586/1] bg-pink-900"
         >
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-10 right-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
             <div className="absolute bottom-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>
           </div>
 
-          <div className="relative z-10 h-full flex flex-col justify-between">
+          <div className="relative z-10 h-full flex flex-col justify-between py-1">
             {/* Header carte */}
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2">
@@ -77,31 +76,29 @@ export default function CartesPage({ currentUser }) {
               </div>
 
               {/* Logo CB */}
-              
               <div
                  className="border-2 border-white rounded-sm px-1.5 py-0.5 sm:px-2 sm:py-1"
                  style={{ background: "rgba(92, 58, 94, 0.6)" }}
               >
-             <div className="flex items-center gap-0" style={{ width: "24px", height: "14px" }}>
-              <svg width="24" height="14" viewBox="0 0 28 16" fill="none" className="w-full h-full">
-       {/* C blanc */}
-            <path 
-               d="M11 2 A6 6 0 1 0 11 14"
-               stroke="white" 
-               strokeWidth="8" 
-               fill="none" 
-            />
-       {/* Rectangles blancs */}
-          <rect x="15" y="1" width="12" height="6.5" rx="1.5" fill="white" />
-         <rect x="15" y="8.5" width="12" height="6.5" rx="1.5" fill="white" />
-        </svg>
-        </div>
-       </div>
-
+                <div className="flex items-center gap-0" style={{ width: "24px", height: "14px" }}>
+                  <svg width="24" height="14" viewBox="0 0 28 16" fill="none" className="w-full h-full">
+                    {/* C blanc */}
+                    <path 
+                       d="M11 2 A6 6 0 1 0 11 14"
+                       stroke="white" 
+                       strokeWidth="8" 
+                       fill="none" 
+                    />
+                    {/* Rectangles blancs */}
+                    <rect x="15" y="1" width="12" height="6.5" rx="1.5" fill="white" />
+                    <rect x="15" y="8.5" width="12" height="6.5" rx="1.5" fill="white" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
-            {/*  Palette */}
-            <div className="flex items-center gap-2 sm:gap-3">                          
+            {/* Palette */}
+            <div className="flex items-center gap-2 sm:gap-3 my-2">                          
               {/* Icône Palette avec pinceau */}
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-[22px] sm:h-[22px]">
@@ -120,26 +117,28 @@ export default function CartesPage({ currentUser }) {
             </div>
 
             {/* Numéro de carte */}
-            <div className="text-xs sm:text-base tracking-widest font-mono">
+            <div className="text-[10px] sm:text-base tracking-wider sm:tracking-widest font-mono mb-2">
               •••• •••• •••• {currentUser?.carte || "4298"}
             </div>
 
-            {/* Bas de la carte */}
+            {/* Bas de la carte - CORRIGÉ POUR MOBILE */}
             <div className="flex justify-between items-end gap-1">
-              <div className="flex-1 min-w-0">
-                <p className="text-[11px] sm:text-sm font-semibold truncate">{currentUser?.nom || ""}</p>
+              <div className="flex-1 min-w-0 pr-1">
+                <p className="text-[10px] sm:text-sm font-semibold truncate uppercase">
+                  {currentUser?.nom || ""}
+                </p>
               </div>
-              <div className="text-center flex-shrink-0">
-                <p className="text-[8px] sm:text-[10px] opacity-75 leading-tight">EXP</p>
-                <p className="text-[10px] sm:text-xs font-semibold">12/25</p>
+              
+              <div className="text-center flex-shrink-0 mr-1">
+                <p className="text-[7px] sm:text-[10px] opacity-75 leading-tight">EXP</p>
+                <p className="text-[9px] sm:text-xs font-semibold">12/25</p>
               </div>
-              <div className="rounded px-1.5 py-0.5 sm:px-2 sm:py-1 flex-shrink-0">
+              
+              <div className="flex-shrink-0">
                 <span
-                  className="text-base sm:text-xl font-semibold tracking-wide text-white"
+                  className="text-sm sm:text-xl font-black italic text-white"
                   style={{ 
                     fontFamily: "sans-serif", 
-                    fontWeight: 900,
-                    fontStyle: "italic",
                     letterSpacing: "-0.02em"
                   }}
                 >
