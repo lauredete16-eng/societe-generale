@@ -201,7 +201,7 @@ export default function VirementPage() {
                 <div className="text-gray-600 text-xs">FR76 3000 3015 8100 0501 3952 794</div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-lg font-semibold whitespace-nowrap">1 308 250 EUR</span>
+                <span className="text-lg font-semibold">1 308 250 EUR</span>
                 <ChevronDown className="w-5 h-5" />
               </div>
             </div>
@@ -327,7 +327,7 @@ export default function VirementPage() {
           </div>
         </div>
 
-        <div className="pt-20 pb-8 flex flex-col max-w-xl mx-auto w-full px-4 py-5">
+        <div className="pt-20 flex flex-col max-w-xl mx-auto w-full px-4 py-5">
           <h2 className="text-center text-lg font-bold text-gray-900 mb-3 tracking-wide">
             AJOUT NOUVEAU BÉNÉFICIAIRE
           </h2>
@@ -410,7 +410,7 @@ export default function VirementPage() {
           </div>
         </div>
 
-        <div className="pt-20 pb-8 max-w-xl mx-auto px-4 py-5">
+        <div className="pt-20 max-w-xl mx-auto px-4 py-5">
           <div className="bg-white rounded-3xl shadow-2xl p-6">
             <div>
               <div className="text-xs text-gray-600 font-semibold">VIREMENT INSTANTANÉ</div>
@@ -463,7 +463,7 @@ export default function VirementPage() {
           </div>
         </div>
 
-        <div className="pt-20 pb-8 flex items-center justify-center p-4">
+        <div className="pt-20 flex items-center justify-center p-4">
           <div className="max-w-xl w-full mx-auto bg-white rounded-3xl shadow-2xl p-6 text-center">
             <div className="flex justify-center mb-5">
               <CheckCircle className="w-20 h-20 text-emerald-600" />

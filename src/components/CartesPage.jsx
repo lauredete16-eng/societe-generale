@@ -82,14 +82,12 @@ export default function CartesPage({ currentUser }) {
               >
                 <div className="flex items-center gap-0" style={{ width: "24px", height: "14px" }}>
                   <svg width="24" height="14" viewBox="0 0 28 16" fill="none" className="w-full h-full">
-                    {/* C blanc */}
                     <path 
                        d="M11 2 A6 6 0 1 0 11 14"
                        stroke="white" 
                        strokeWidth="8" 
                        fill="none" 
                     />
-                    {/* Rectangles blancs */}
                     <rect x="15" y="1" width="12" height="6.5" rx="1.5" fill="white" />
                     <rect x="15" y="8.5" width="12" height="6.5" rx="1.5" fill="white" />
                   </svg>
@@ -99,17 +97,13 @@ export default function CartesPage({ currentUser }) {
 
             {/* Palette */}
             <div className="flex items-center gap-2 sm:gap-3 my-2">                          
-              {/* Icône Palette avec pinceau */}
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-[22px] sm:h-[22px]">
-                  {/* Palette */}
                   <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" stroke="#5c3a5e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  {/* Points de couleur sur la palette */}
                   <circle cx="7.5" cy="10" r="1" fill="#5c3a5e"/>
                   <circle cx="12" cy="7.5" r="1" fill="#5c3a5e"/>
                   <circle cx="16" cy="10" r="1" fill="#5c3a5e"/>
                   <circle cx="9.5" cy="13.5" r="1" fill="#5c3a5e"/>
-                  {/* Pinceau */}
                   <path d="M18 4l2-2m0 0l1 1m-1-1l-3 3" stroke="#5c3a5e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   <line x1="19" y1="5" x2="16.5" y2="7.5" stroke="#5c3a5e" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
@@ -121,7 +115,7 @@ export default function CartesPage({ currentUser }) {
               •••• •••• •••• {currentUser?.carte || "4298"}
             </div>
 
-            {/* Bas de la carte - CORRIGÉ MOBILE */}
+            {/* Bas de la carte */}
             <div className="flex justify-between items-end gap-2 sm:gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] sm:text-sm font-semibold truncate uppercase">
@@ -129,19 +123,15 @@ export default function CartesPage({ currentUser }) {
                 </p>
               </div>
               
-              <div className="text-center flex-shrink-0">
+              <div className="text-center ">
                 <p className="text-[8px] sm:text-[10px] opacity-75 leading-none mb-0.5">EXP</p>
                 <p className="text-[11px] sm:text-xs font-semibold leading-none">12/25</p>
               </div>
               
-              <div className="flex-shrink-0">
+              <div className="">
                 <span
                   className="text-base sm:text-xl font-black italic text-white block"
-                  style={{ 
-                    fontFamily: "sans-serif", 
-                    letterSpacing: "-0.02em",
-                    lineHeight: "1"
-                  }}
+                  style={{ fontFamily: "sans-serif", letterSpacing: "-0.02em", lineHeight: "1" }}
                 >
                   VISA
                 </span>
@@ -168,7 +158,9 @@ export default function CartesPage({ currentUser }) {
           <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Gérer mes plafonds</h2>
           <div className="mb-6">
             <div className="mb-1">
-              <span className="text-xs sm:text-sm text-gray-900 font-semibold">Plafond de paiement mensuel <span className="text-[10px] sm:text-xs text-gray-500 font-normal">(jusqu'au 30/04/2026)</span></span>
+              <span className="text-xs sm:text-sm text-gray-900 font-semibold">
+                Plafond de paiement mensuel <span className="text-[10px] sm:text-xs text-gray-500 font-normal">(jusqu'au 30/04/2026)</span>
+              </span>
             </div>
             <div className="flex justify-end mb-3">
               <p className="text-xl sm:text-2xl font-bold text-gray-900">300000,00 €</p>
@@ -264,7 +256,7 @@ export default function CartesPage({ currentUser }) {
           <button className="w-full bg-white rounded-lg p-4 sm:p-5 shadow-sm hover:bg-gray-50 transition text-left">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-base sm:text-lg font-bold text-gray-900">Consulter mon code secret</h3>
-              <ChevronRight size={24} className="text-gray-400 flex-shrink-0" />
+              <ChevronRight size={24} className="text-gray-400 " />
             </div>
             <p className="text-xs sm:text-sm text-gray-600">
               Vous avez oublié le code secret de votre carte bancaire ? Consultez-le à l'abri des regards indiscrets.
@@ -274,7 +266,7 @@ export default function CartesPage({ currentUser }) {
           <button className="w-full bg-white rounded-lg p-4 sm:p-5 shadow-sm hover:bg-gray-50 transition text-left">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-base sm:text-lg font-bold text-gray-900">Paramétrer ma carte</h3>
-              <ChevronRight size={24} className="text-gray-400 flex-shrink-0" />
+              <ChevronRight size={24} className="text-gray-400 " />
             </div>
             <p className="text-xs sm:text-sm text-gray-600">
               Achats en ligne, retraits ou opérations à l'étranger ne vous servent pas ? Ajustez-les à votre usage.
@@ -284,7 +276,7 @@ export default function CartesPage({ currentUser }) {
           <button className="w-full bg-white rounded-lg p-4 sm:p-5 shadow-sm hover:bg-gray-50 transition text-left">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-base sm:text-lg font-bold text-gray-900">Déclarer un voyage à l'étranger</h3>
-              <ChevronRight size={24} className="text-gray-400 flex-shrink-0" />
+              <ChevronRight size={24} className="text-gray-400 " />
             </div>
             <p className="text-xs sm:text-sm text-gray-600">
               Vous partez à l'étranger ? Dites-le nous pour éviter tout blocage de votre carte.
@@ -294,28 +286,16 @@ export default function CartesPage({ currentUser }) {
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Liens utiles</h2>
             <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 sm:gap-4 p-3 hover:bg-gray-50 rounded-lg transition">
-                <Star size={24} className="text-gray-600 flex-shrink-0" />
-                <span className="text-sm sm:text-base text-gray-900 font-medium flex-1 text-left">Mes avantages</span>
-                <ChevronRight size={20} className="text-gray-400 flex-shrink-0" />
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                <Shield size={20} /> Services Sécurité
               </button>
-              <button className="w-full flex items-center gap-3 sm:gap-4 p-3 hover:bg-gray-50 rounded-lg transition">
-                <Shield size={24} className="text-gray-600 flex-shrink-0" />
-                <span className="text-sm sm:text-base text-gray-900 font-medium flex-1 text-left">
-                  Guide assurance et assistance
-                </span>
-                <ChevronRight size={20} className="text-gray-400 flex-shrink-0" />
-              </button>
-              <button className="w-full flex items-center gap-3 sm:gap-4 p-3 hover:bg-gray-50 rounded-lg transition">
-                <FileText size={24} className="text-gray-600 flex-shrink-0" />
-                <span className="text-sm sm:text-base text-gray-900 font-medium flex-1 text-left">
-                  Conditions générales de ma carte
-                </span>
-                <ChevronRight size={20} className="text-gray-400 flex-shrink-0" />
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                <Star size={20} /> Vos avantages
               </button>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
