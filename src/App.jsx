@@ -5,13 +5,15 @@ import AccountPage from "./components/AccountPage";
 import VirementPage from "./components/VirementPage";
 import DecouvertPage from "./components/DecouvertPage";
 import CartesPage from "./components/CartesPage";
+import ProfilPage from "./components/ProfilPage";
+import ParametresPage from "./components/ParametresPage";
+import DepotPage from "./components/DepotPage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 
 function AppRoutes() {
   const { isLoggedIn, currentUser, loading } = useAuth();
 
-  // Afficher un loader pendant la vérification de l'authentification
   if (loading) {
     return (
       <div style={{ 
@@ -27,13 +29,11 @@ function AppRoutes() {
 
   return (
     <Routes>
-      {/* Page login */}
       <Route
         path="/login"
         element={!isLoggedIn ? <LoginScreen /> : <Navigate to="/accueil" replace />}
       />
 
-      {/* Pages protégées */}
       <Route
         path="/accueil"
         element={
@@ -70,13 +70,38 @@ function AppRoutes() {
         }
       />
 
-      {/* Redirection racine */}
+      <Route
+        path="/profil"
+        element={
+          <PrivateRoute isLoggedIn={isLoggedIn}>
+            <ProfilPage currentUser={currentUser} />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/parametres"
+        element={
+          <PrivateRoute isLoggedIn={isLoggedIn}>
+            <ParametresPage currentUser={currentUser} />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/depot"
+        element={
+          <PrivateRoute isLoggedIn={isLoggedIn}>
+            <DepotPage currentUser={currentUser} />
+          </PrivateRoute>
+        }
+      />
+
       <Route 
         path="/" 
         element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />} 
       />
       
-      {/* Catch-all - toutes les routes non définies */}
       <Route 
         path="*" 
         element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />} 

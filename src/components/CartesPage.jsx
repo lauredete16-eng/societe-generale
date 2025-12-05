@@ -33,37 +33,37 @@ export default function CartesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col pb-24">
       <div className="w-full bg-red-600 pt-6 pb-24 sm:pb-32 text-center relative z-10">
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 px-4">CB Gold Evolution</h2>
         <p className="text-white font-semibold">Compte n° •••• 9527</p>
         <p className="text-white mt-1">Débit immédiat</p>
       </div>
 
-      <div className="relative z-20 -mt-20 sm:-mt-28 max-w-sm mx-auto w-full px-4">
-        <div className="rounded-xl p-4 sm:p-5 text-white shadow-xl relative overflow-hidden aspect-[1.586/1] bg-pink-900">
+      <div className="relative z-20 -mt-20 sm:-mt-28 max-w-sm mx-auto w-full px-4 mb-6">
+        <div className="rounded-xl p-5 sm:p-6 text-white shadow-xl relative overflow-hidden aspect-[1.586/1] bg-pink-900">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-10 right-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
             <div className="absolute bottom-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>
           </div>
 
-          <div className="relative z-10 h-full flex flex-col justify-between py-1">
+          <div className="relative z-10 h-full flex flex-col justify-between">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 border-2 border-white rounded-sm flex flex-col overflow-hidden relative">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 border-white rounded-sm flex flex-col overflow-hidden relative">
                   <div className="w-full flex-1 bg-red-600"></div>
                   <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-white transform -translate-y-1/2 z-10"></div>
                   <div className="w-full flex-1 bg-black"></div>
                 </div>
-                <div className="text-xs sm:text-[15px] font-semibold text-gray-100 leading-tight tracking-wide">
+                <div className="text-sm sm:text-base font-semibold text-gray-100 leading-tight tracking-wide">
                   <div>SOCIETE</div>
                   <div>GENERALE</div>
                 </div>
               </div>
 
-              <div className="border-2 border-white rounded-sm px-1.5 py-0.5 sm:px-2 sm:py-1" style={{ background: "rgba(92, 58, 94, 0.6)" }}>
-                <div className="flex items-center gap-0" style={{ width: "24px", height: "14px" }}>
-                  <svg width="24" height="14" viewBox="0 0 28 16" fill="none" className="w-full h-full">
+              <div className="border-2 border-white rounded-sm px-2 py-1" style={{ background: "rgba(92, 58, 94, 0.6)" }}>
+                <div className="flex items-center gap-0" style={{ width: "28px", height: "16px" }}>
+                  <svg width="28" height="16" viewBox="0 0 28 16" fill="none" className="w-full h-full">
                     <path d="M11 2 A6 6 0 1 0 11 14" stroke="white" strokeWidth="8" fill="none" />
                     <rect x="15" y="1" width="12" height="6.5" rx="1.5" fill="white" />
                     <rect x="15" y="8.5" width="12" height="6.5" rx="1.5" fill="white" />
@@ -72,9 +72,9 @@ export default function CartesPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3 my-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="sm:w-[22px] sm:h-[22px]">
+            <div className="flex items-center gap-3 my-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="sm:w-6 sm:h-6">
                   <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" stroke="#5c3a5e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   <circle cx="7.5" cy="10" r="1" fill="#5c3a5e"/>
                   <circle cx="12" cy="7.5" r="1" fill="#5c3a5e"/>
@@ -86,24 +86,24 @@ export default function CartesPage() {
               </div>
             </div>
 
-            <div className="text-sm sm:text-base tracking-wider sm:tracking-widest font-mono mb-2 drop-shadow-sm font-semibold">
+            <div className="text-lg sm:text-xl tracking-widest sm:tracking-widest font-mono mb-3 sm:mb-4 drop-shadow-md font-semibold">
               •••• •••• •••• {currentUser?.carte || "4298"}
             </div>
 
-            <div className="flex justify-between items-end gap-2 sm:gap-3">
+            <div className="flex justify-between items-end gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs sm:text-sm font-bold truncate uppercase drop-shadow-sm">
+                <p className="text-sm sm:text-base font-bold truncate uppercase drop-shadow-md">
                   {currentUser?.nom || "JEAN DUPONT"}
                 </p>
               </div>
               
-              <div className="text-center">
-                <p className="text-[10px] sm:text-[10px] font-medium leading-none mb-1 drop-shadow-sm">EXP</p>
-                <p className="text-xs sm:text-xs font-bold leading-none drop-shadow-sm">12/25</p>
+              <div className="text-center flex-shrink-0">
+                <p className="text-xs font-medium leading-none mb-1 drop-shadow-md">EXP</p>
+                <p className="text-sm font-bold leading-none drop-shadow-md">12/25</p>
               </div>
               
-              <div>
-                <span className="text-lg sm:text-xl font-black italic text-white block drop-shadow-md" style={{ fontFamily: "sans-serif", letterSpacing: "-0.02em", lineHeight: "1" }}>
+              <div className="flex-shrink-0">
+                <span className="text-2xl sm:text-3xl font-black italic text-white block drop-shadow-lg" style={{ fontFamily: "sans-serif", letterSpacing: "-0.02em", lineHeight: "1" }}>
                   VISA
                 </span>
               </div>
@@ -112,8 +112,8 @@ export default function CartesPage() {
         </div>
       </div>
 
-      <div className="flex-1 px-4 py-6 max-w-4xl mx-auto w-full">
-        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6 mb-6">
+      <div className="flex-1 px-4 py-2 max-w-4xl mx-auto w-full">
+        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-6">
           <button className="flex items-center justify-center gap-2 bg-white text-red-600 font-semibold py-2 px-4 rounded-md shadow hover:bg-gray-100 transition">
             <Lock size={18} /> Verrouiller
           </button>
@@ -242,12 +242,30 @@ export default function CartesPage() {
 
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Liens utiles</h2>
-            <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
-                <Shield size={20} /> Services Sécurité
+            <div className="space-y-3">
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
+                <Shield size={20} className="flex-shrink-0" /> 
+                <span className="text-left">Services Sécurité</span>
               </button>
-              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
-                <Star size={20} /> Vos avantages
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
+                <Star size={20} className="flex-shrink-0" /> 
+                <span className="text-left">Vos avantages</span>
+              </button>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
+                <FileText size={20} className="flex-shrink-0" /> 
+                <span className="text-left">Conditions générales d'utilisation</span>
+              </button>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
+                <ChevronRight size={20} className="flex-shrink-0" /> 
+                <span className="text-left">Assurances et garanties de ma carte</span>
+              </button>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
+                <Shield size={20} className="flex-shrink-0" /> 
+                <span className="text-left">Conseils de sécurité bancaire</span>
+              </button>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
+                <Star size={20} className="flex-shrink-0" /> 
+                <span className="text-left">Programme de fidélité et récompenses</span>
               </button>
             </div>
           </div>
