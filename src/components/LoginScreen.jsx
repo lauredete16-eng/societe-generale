@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Check, Info, Eye, EyeOff, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { usersDB } from "../services/userService";
+import { usersDB } from "../services/UserService.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function LoginScreen() {
