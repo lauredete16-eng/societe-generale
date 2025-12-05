@@ -1,5 +1,5 @@
 import React from "react";
-import { formatEuro } from "../utils/format";
+import { formatEuro } from "../utils/Format.js";
 import NavBar from "./NavBar";
 
 export default function DecouvertPage({ currentUser }) {
