@@ -97,12 +97,12 @@ export default function CartesPage() {
                 </p>
               </div>
               
-              <div className="text-center flex-shrink-0">
+              <div className="text-center flex-1">
                 <p className="text-xs font-medium leading-none mb-1 drop-shadow-md">EXP</p>
                 <p className="text-sm font-bold leading-none drop-shadow-md">12/25</p>
               </div>
               
-              <div className="flex-shrink-0">
+              <div className="flex-1 text-right">
                 <span className="text-2xl sm:text-3xl font-black italic text-white block drop-shadow-lg" style={{ fontFamily: "sans-serif", letterSpacing: "-0.02em", lineHeight: "1" }}>
                   VISA
                 </span>
@@ -242,30 +242,24 @@ export default function CartesPage() {
 
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Liens utiles</h2>
-            <div className="space-y-3">
-              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
-                <Shield size={20} className="flex-shrink-0" /> 
-                <span className="text-left">Services Sécurité</span>
+            <div className="space-y-2">
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                <Shield size={20} /> Services Sécurité
               </button>
-              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
-                <Star size={20} className="flex-shrink-0" /> 
-                <span className="text-left">Vos avantages</span>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                <Star size={20} /> Vos avantages
               </button>
-              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
-                <FileText size={20} className="flex-shrink-0" /> 
-                <span className="text-left">Conditions générales d'utilisation</span>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                <FileText size={20} /> Conditions générales d'utilisation
               </button>
-              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
-                <ChevronRight size={20} className="flex-shrink-0" /> 
-                <span className="text-left">Assurances et garanties de ma carte</span>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                <ChevronRight size={20} /> Assurances et garanties de ma carte
               </button>
-              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
-                <Shield size={20} className="flex-shrink-0" /> 
-                <span className="text-left">Conseils de sécurité bancaire</span>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                <Shield size={20} /> Conseils de sécurité bancaire
               </button>
-              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base py-2">
-                <Star size={20} className="flex-shrink-0" /> 
-                <span className="text-left">Programme de fidélité et récompenses</span>
+              <button className="w-full flex items-center gap-3 sm:gap-4 text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                <Star size={20} /> Programme de fidélité et récompenses
               </button>
             </div>
           </div>
