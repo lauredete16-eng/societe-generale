@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { usersDB } from "../services/UserServiceser.js";
+import { usersDB } from "../services/UserService.js";
 
 export const AuthContext = createContext();
 
