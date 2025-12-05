@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Loader2, ChevronRight, ChevronDown, ChevronUp, Star, Shield, FileText, Edit, Lock } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function CartesPage() {
+  const { currentUser } = useAuth(); // ✅ Récupérer l'utilisateur du Context
   const [loading, setLoading] = useState(true);
   const [carteActive, setCarteActive] = useState(true);
   const [optionsOpen, setOptionsOpen] = useState(false);
-  
-  const currentUser = {
-    nom: "JEAN DUPONT",
-    carte: "4298"
+
+  // Formater le nom pour l'affichage sur la carte (NOM PRÉNOM en majuscules)
+  const formatCardName = (fullName) => {
+    if (!fullName) return "NOM UTILISATEUR";
+    const parts = fullName.trim().split(" ");
+    if (parts.length >= 2) {
+      // Si format "Nom Prénom" → "NOM PRÉNOM"
+      return `${parts[0].toUpperCase()} ${parts[1].toUpperCase()}`;
+    }
+    return fullName.toUpperCase();
   };
 
   useEffect(() => {
@@ -48,7 +56,7 @@ export default function CartesPage() {
           </div>
 
           <div className="relative z-10 h-full flex flex-col justify-between">
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start -mt-1">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 border-white rounded-sm flex flex-col overflow-hidden relative">
                   <div className="w-full flex-1 bg-red-600"></div>
@@ -86,20 +94,20 @@ export default function CartesPage() {
               </div>
             </div>
 
-            <div className="text-lg sm:text-xl tracking-widest sm:tracking-widest font-mono mb-3 sm:mb-4 drop-shadow-md font-semibold">
+            <div className="text-lg sm:text-xl tracking-widest sm:tracking-widest font-mono mb-auto drop-shadow-md font-semibold">
               •••• •••• •••• {currentUser?.carte || "4298"}
             </div>
 
-            <div className="flex justify-between items-end gap-3">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm sm:text-base font-bold truncate uppercase drop-shadow-md">
-                  {currentUser?.nom || "JEAN DUPONT"}
+            <div className="flex justify-between items-end gap-3 mt-auto">
+              <div className="flex-1">
+                <p className="text-[10px] sm:text-xs font-bold uppercase drop-shadow-md leading-tight whitespace-nowrap overflow-hidden">
+                  {formatCardName(currentUser?.nom)}
                 </p>
               </div>
               
-              <div className="text-center flex-1">
-                <p className="text-xs font-medium leading-none mb-1 drop-shadow-md">EXP</p>
-                <p className="text-sm font-bold leading-none drop-shadow-md">12/25</p>
+              <div className="text-center flex-shrink-0">
+                <p className="text-[10px] font-medium leading-none mb-1 drop-shadow-md opacity-80">EXP</p>
+                <p className="text-xs font-bold leading-none drop-shadow-md">{currentUser?.exp || "12/25"}</p>
               </div>
               
               <div className="flex-1 text-right">
