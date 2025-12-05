@@ -46,17 +46,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("currentUser");
   };
 
-  // Afficher un loader pendant la vérification de la session
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-xl text-gray-600">Chargement...</div>
-      </div>
-    );
-  }
-
   return (
-    <AuthContext.Provider value={{ isLoggedIn, currentUser, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, currentUser, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

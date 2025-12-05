@@ -2,24 +2,35 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginScreen from "./components/LoginScreen";
 import AccountPage from "./components/AccountPage";
-import ProfilPage from "./components/ProfilPage";
 import VirementPage from "./components/VirementPage";
-
 import DecouvertPage from "./components/DecouvertPage";
 import CartesPage from "./components/CartesPage";
-import ParametresPage from "./components/ParametresPage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 
 function AppRoutes() {
-  const { isLoggedIn, currentUser } = useAuth();
+  const { isLoggedIn, currentUser, loading } = useAuth();
+
+  // Afficher un loader pendant la vérification de l'authentification
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        Chargement...
+      </div>
+    );
+  }
 
   return (
     <Routes>
       {/* Page login */}
       <Route
         path="/login"
-        element={!isLoggedIn ? <LoginScreen /> : <Navigate to="/accueil" />}
+        element={!isLoggedIn ? <LoginScreen /> : <Navigate to="/accueil" replace />}
       />
 
       {/* Pages protégées */}
@@ -31,14 +42,7 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
-      <Route
-        path="/profil"
-        element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <ProfilPage currentUser={currentUser} />
-          </PrivateRoute>
-        }
-      />
+      
       <Route
         path="/virement"
         element={
@@ -56,6 +60,7 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+      
       <Route
         path="/cartes"
         element={
@@ -64,18 +69,18 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
-      <Route
-        path="/parametres"
-        element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <ParametresPage currentUser={currentUser} />
-          </PrivateRoute>
-        }
-      />
 
-      {/* Redirections par défaut */}
-      <Route path="/" element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} />} />
-      <Route path="*" element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} />} />
+      {/* Redirection racine */}
+      <Route 
+        path="/" 
+        element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />} 
+      />
+      
+      {/* Catch-all - toutes les routes non définies */}
+      <Route 
+        path="*" 
+        element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />} 
+      />
     </Routes>
   );
 }
@@ -87,5 +92,5 @@ export default function App() {
         <AppRoutes />
       </AuthProvider>
     </BrowserRouter>
- );
+  );
 }

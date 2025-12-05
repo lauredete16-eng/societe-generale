@@ -117,29 +117,30 @@ export default function CartesPage({ currentUser }) {
             </div>
 
             {/* Numéro de carte */}
-            <div className="text-[10px] sm:text-base tracking-wider sm:tracking-widest font-mono mb-2">
+            <div className="text-xs sm:text-base tracking-wider sm:tracking-widest font-mono mb-2">
               •••• •••• •••• {currentUser?.carte || "4298"}
             </div>
 
-            {/* Bas de la carte - CORRIGÉ POUR MOBILE */}
-            <div className="flex justify-between items-end gap-1">
-              <div className="flex-1 min-w-0 pr-1">
-                <p className="text-[10px] sm:text-sm font-semibold truncate uppercase">
-                  {currentUser?.nom || ""}
+            {/* Bas de la carte - CORRIGÉ MOBILE */}
+            <div className="flex justify-between items-end gap-2 sm:gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] sm:text-sm font-semibold truncate uppercase">
+                  {currentUser?.nom || "JEAN DUPONT"}
                 </p>
               </div>
               
-              <div className="text-center flex-shrink-0 mr-1">
-                <p className="text-[7px] sm:text-[10px] opacity-75 leading-tight">EXP</p>
-                <p className="text-[9px] sm:text-xs font-semibold">12/25</p>
+              <div className="text-center flex-shrink-0">
+                <p className="text-[8px] sm:text-[10px] opacity-75 leading-none mb-0.5">EXP</p>
+                <p className="text-[11px] sm:text-xs font-semibold leading-none">12/25</p>
               </div>
               
               <div className="flex-shrink-0">
                 <span
-                  className="text-sm sm:text-xl font-black italic text-white"
+                  className="text-base sm:text-xl font-black italic text-white block"
                   style={{ 
                     fontFamily: "sans-serif", 
-                    letterSpacing: "-0.02em"
+                    letterSpacing: "-0.02em",
+                    lineHeight: "1"
                   }}
                 >
                   VISA
