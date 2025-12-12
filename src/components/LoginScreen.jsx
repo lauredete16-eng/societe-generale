@@ -9,7 +9,7 @@ export default function LoginScreen() {
   const { login } = useAuth();
 
   const [rememberMe, setRememberMe] = useState(false);
-  const [step, setStep] = useState("code"); // "code" ou "password"
+  const [step, setStep] = useState("code");
   const [loginCode, setLoginCode] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +29,6 @@ export default function LoginScreen() {
     setError("");
     setIsLoading(true);
 
-    // Délai de 800ms avant de passer à l'étape suivante
     setTimeout(() => {
       if (loginCode.length === 8) {
         const user = usersDB[loginCode];
@@ -45,18 +44,16 @@ export default function LoginScreen() {
     }, 800);
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Délai de 800ms avant la validation finale
-    setTimeout(() => {
-      const result = login(loginCode, password);
+    setTimeout(async () => {
+      const result = await login(loginCode, password);
 
       if (result.success) {
         if (rememberMe) localStorage.setItem("savedLoginCode", loginCode);
         else localStorage.removeItem("savedLoginCode");
-
         navigate("/accueil");
       } else {
         setError("Mot de passe incorrect");

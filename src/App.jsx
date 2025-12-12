@@ -8,24 +8,49 @@ import CartesPage from "./components/CartesPage";
 import ProfilPage from "./components/ProfilPage";
 import ParametresPage from "./components/ParametresPage";
 import DepotPage from "./components/DepotPage";
+import AssurancesPage from "./pages/AssurancesPage";
+import ConditionsTarifaires from "./pages/ConditionsTarifaires";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 
 function AppRoutes() {
-  const { isLoggedIn, currentUser, loading } = useAuth();
+  const { isLoggedIn, loading, currentUser } = useAuth();
+
+  console.log('');
+  console.log('🎬 ========================================');
+  console.log('🎬 AppRoutes RENDER');
+  console.log('🎬 ========================================');
+  console.log('📊 État actuel:', {
+    loading,
+    isLoggedIn,
+    hasUser: !!currentUser,
+    userName: currentUser?.nom
+  });
+  console.log('🎬 ========================================');
+  console.log('');
 
   if (loading) {
+    console.log('⏳ Affichage écran de chargement...');
     return (
       <div style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
-        height: '100vh' 
+        height: '100vh',
+        flexDirection: 'column',
+        gap: '20px'
       }}>
-        Chargement...
+        <div>Chargement...</div>
+        <div style={{ fontSize: '12px', color: '#666' }}>
+          (Ouvre la console F12 pour voir les logs)
+        </div>
       </div>
     );
   }
+
+  console.log('✅ Chargement terminé, affichage des routes');
+  console.log('🔀 isLoggedIn =', isLoggedIn);
+  console.log('🔀 Redirection vers:', isLoggedIn ? '/accueil' : '/login');
 
   return (
     <Routes>
@@ -37,8 +62,8 @@ function AppRoutes() {
       <Route
         path="/accueil"
         element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <AccountPage currentUser={currentUser} />
+          <PrivateRoute>
+            <AccountPage />
           </PrivateRoute>
         }
       />
@@ -46,8 +71,8 @@ function AppRoutes() {
       <Route
         path="/virement"
         element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <VirementPage currentUser={currentUser} />
+          <PrivateRoute>
+            <VirementPage />
           </PrivateRoute>
         }
       />
@@ -55,8 +80,8 @@ function AppRoutes() {
       <Route
         path="/decouvert"
         element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <DecouvertPage currentUser={currentUser} />
+          <PrivateRoute>
+            <DecouvertPage />
           </PrivateRoute>
         }
       />
@@ -64,8 +89,26 @@ function AppRoutes() {
       <Route
         path="/cartes"
         element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <CartesPage currentUser={currentUser} />
+          <PrivateRoute>
+            <CartesPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/assurances"
+        element={
+          <PrivateRoute>
+            <AssurancesPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/conditions-tarifaires"
+        element={
+          <PrivateRoute>
+            <ConditionsTarifaires />
           </PrivateRoute>
         }
       />
@@ -73,8 +116,8 @@ function AppRoutes() {
       <Route
         path="/profil"
         element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <ProfilPage currentUser={currentUser} />
+          <PrivateRoute>
+            <ProfilPage />
           </PrivateRoute>
         }
       />
@@ -82,8 +125,8 @@ function AppRoutes() {
       <Route
         path="/parametres"
         element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <ParametresPage currentUser={currentUser} />
+          <PrivateRoute>
+            <ParametresPage />
           </PrivateRoute>
         }
       />
@@ -91,23 +134,25 @@ function AppRoutes() {
       <Route
         path="/depot"
         element={
-          <PrivateRoute isLoggedIn={isLoggedIn}>
-            <DepotPage currentUser={currentUser} />
+          <PrivateRoute>
+            <DepotPage />
           </PrivateRoute>
         }
       />
 
       <Route
-            path="*"
-            element={<Navigate to={isLoggedIn ?"/accueil": "/login"}replace/>}
-            />
-      
-      
+        path="*"
+        element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />}
+      />
     </Routes>
   );
 }
 
 export default function App() {
+  console.log('🚀 ========================================');
+  console.log('🚀 App.jsx RENDER');
+  console.log('🚀 ========================================');
+  
   return (
     <BrowserRouter>
       <AuthProvider>
