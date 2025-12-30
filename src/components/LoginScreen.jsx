@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Check, Info, Eye, EyeOff, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { usersDB } from "../services/UserService.js";
+import { usersDB, getDBVersion } from "../services/UserService.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function LoginScreen() {
@@ -15,6 +15,12 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Afficher la version au chargement
+  useEffect(() => {
+    console.log(`📦 Version de la base de données: ${getDBVersion()}`);
+    console.log(`👥 Utilisateurs disponibles:`, Object.keys(usersDB));
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("savedLoginCode");
@@ -32,6 +38,9 @@ export default function LoginScreen() {
     setTimeout(() => {
       if (loginCode.length === 8) {
         const user = usersDB[loginCode];
+        console.log(`🔍 Recherche utilisateur avec code: ${loginCode}`);
+        console.log(`✅ Utilisateur trouvé:`, user ? user.nom : 'NON TROUVÉ');
+        
         if (user) {
           setStep("password");
         } else {
@@ -217,6 +226,11 @@ export default function LoginScreen() {
           )}
 
         </div>
+      </div>
+
+      {/* VERSION - Coin bas droite */}
+      <div className="fixed bottom-2 right-2 text-xs text-gray-400 bg-white px-2 py-1 rounded border border-gray-200">
+        v{getDBVersion()}
       </div>
   </div>
 );

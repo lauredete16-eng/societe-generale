@@ -12,7 +12,8 @@ import AssurancesPage from "../pages/AssurancesPage";
 import ConditionsTarifaires from "../pages/ConditionsTarifaires";
 
 export default function CartesPage() {
-  const { currentUser } = useAuth();
+  // ✅ CORRECTION : Récupérer setCurrentUser du contexte
+  const { currentUser, setCurrentUser } = useAuth();
   
   const [loading, setLoading] = useState(true);
   const [carteActive, setCarteActive] = useState(true);
@@ -127,6 +128,7 @@ export default function CartesPage() {
 
   const pageProps = {
     currentUser,
+    setCurrentUser, // ✅ AJOUTÉ : Passer setCurrentUser aux pages enfants
     navigateTo,
     carteActive,
     setCarteActive,

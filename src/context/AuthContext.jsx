@@ -1,11 +1,12 @@
-// AuthContext.jsx - VERSION LOCALSTORAGE
+// AuthContext.jsx - VERSION AVEC SUPPORT VERSIONING
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { usersDB } from "../services/UserService.js";
+import { usersDB, getDBVersion } from "../services/UserService.js";
 
 export const AuthContext = createContext();
 
 const USER_STORAGE_KEY = 'user:current';
 const USERS_STORAGE_KEY = 'users:database';
+const VERSION_STORAGE_KEY = 'users:db_version';
 
 export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,6 +52,18 @@ export function AuthProvider({ children }) {
 
   const loadUsersDB = () => {
     try {
+      const savedVersion = localStorage.getItem(VERSION_STORAGE_KEY);
+      const currentVersion = getDBVersion();
+      
+      console.log(`📦 Version sauvegardée: ${savedVersion}`);
+      console.log(`📦 Version actuelle: ${currentVersion}`);
+      
+      // Si la version a changé, forcer le rechargement
+      if (savedVersion && parseInt(savedVersion) !== currentVersion) {
+        console.log('🔄 Nouvelle version détectée ! Rechargement de la base...');
+        return null;
+      }
+      
       const data = localStorage.getItem(USERS_STORAGE_KEY);
       
       if (data) {
@@ -68,7 +81,9 @@ export function AuthProvider({ children }) {
   const saveUsersDB = (users) => {
     try {
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+      localStorage.setItem(VERSION_STORAGE_KEY, getDBVersion().toString());
       console.log('💾 Base de données utilisateurs sauvegardée');
+      console.log(`📦 Version ${getDBVersion()} enregistrée`);
       return true;
     } catch (error) {
       console.error('❌ Erreur sauvegarde base de données:', error);
@@ -82,7 +97,7 @@ export function AuthProvider({ children }) {
     if (!savedUsers) {
       savedUsers = { ...usersDB };
       saveUsersDB(savedUsers);
-      console.log('🔄 Base de données initialisée');
+      console.log(`🔄 Base de données initialisée (version ${getDBVersion()})`);
     }
     
     return savedUsers;
@@ -106,11 +121,10 @@ export function AuthProvider({ children }) {
     console.log('👤 Utilisateur:', user.nom);
     console.log('💰 Solde initial:', user.solde);
 
-    // ✅ FIX : garder l'IBAN, ne jamais remettre le code
     const userWithCredentials = {
       ...user,
       username: code,
-      numeroCompte: user.numeroCompte  // <-- ICI la correction
+      numeroCompte: user.numeroCompte
     };
     
     setCurrentUserState(userWithCredentials);

@@ -1,9 +1,12 @@
-// UserService.js - VERSION AVEC MONTANT DE DÉBLOCAGE PAR UTILISATEUR
+// UserService.js - VERSION AVEC SYSTÈME DE VERSIONING
+
+// 🔄 INCRÉMENTEZ CE NUMÉRO À CHAQUE MODIFICATION (1, 2, 3, 4...)
+export const DB_VERSION = 1;
 
 export const usersDB = {
   "12345678": {
     nom: "Dubois Christine",
-    numeroCompte: "FR76 3000 6000 0112 3456 7890 189",
+    numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
     solde: 4000000.0,
     email: "christine.dubois@email.com",
     telephone: "+33 6 12 34 56 78",
@@ -16,9 +19,25 @@ export const usersDB = {
     compteBloque: true,
     notifications: 2,
     password: "000000",
-    montantDeblocage: 100 // Montant spécifique à l'utilisateur
+    montantDeblocage: 100
   },
-
+  "22232425": {
+    nom: "Alexandre Roussel",
+    numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
+    solde: 58600.0,
+    email: "Alexandreroussel07050@email.com",
+    telephone: "+33 7 56 84 42 55",
+    adresse: "10 Rue Roger Salengro, 69009 Lyon",
+    carte: "4567",
+    numeroComplet: "4567 8912 3456 7890",
+    exp: "12/25",
+    decouvertAutorise: 500,
+    decouvertUtilise: 0,
+    compteBloque: true,
+    notifications: 2,
+    password: "260823",
+    montantDeblocage: 750
+  },
   "56789012": {
     nom: "Martin Pierre",
     numeroCompte: "FR76 3000 6000 0156 7890 1234 567",
@@ -36,7 +55,6 @@ export const usersDB = {
     password: "123456",
     montantDeblocage: 50
   },
-
   "9999": {
     nom: "Lefebvre Sophie",
     numeroCompte: "FR76 3000 6000 0199 9988 7766 554",
@@ -56,9 +74,17 @@ export const usersDB = {
   }
 };
 
+// Log automatique de la version au chargement
+console.log(`🔄 UserService chargé - Version ${DB_VERSION}`);
+console.log(`📊 Nombre d'utilisateurs: ${Object.keys(usersDB).length}`);
+console.log(`🔑 Codes disponibles:`, Object.keys(usersDB));
+
 // Récupérer un utilisateur par code ou numéro de compte
 export const loginUser = (code) => {
-  return usersDB[code] || null;
+  console.log(`🔍 Tentative de connexion avec le code: ${code}`);
+  const user = usersDB[code] || null;
+  console.log(user ? `✅ Utilisateur trouvé: ${user.nom}` : `❌ Aucun utilisateur avec ce code`);
+  return user;
 };
 
 // Récupérer le montant de déblocage d'un utilisateur
@@ -74,4 +100,16 @@ export const setMontantDeblocage = (code, montant) => {
     return true;
   }
   return false;
+};
+
+// Obtenir la version de la base de données
+export const getDBVersion = () => DB_VERSION;
+
+// Obtenir tous les utilisateurs (pour debug)
+export const getAllUsers = () => {
+  return Object.entries(usersDB).map(([code, user]) => ({
+    code,
+    nom: user.nom,
+    email: user.email
+  }));
 };

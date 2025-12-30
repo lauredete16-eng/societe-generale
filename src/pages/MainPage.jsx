@@ -41,12 +41,12 @@ export default function MainPage({
           />
           
           {/* Overlay pour afficher les informations dynamiques de l'utilisateur */}
-          <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+          <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-white">
             {/* Informations en bas de la carte */}
             <div>
-              {/* Numéro de carte - décalé vers la droite et un peu plus haut */}
-              <div className="mb-4 flex justify-end pr-16">
-                <p className="text-base sm:text-lg font-mono tracking-widest" 
+              {/* Numéro de carte - responsive */}
+              <div className="mb-3 sm:mb-4 flex justify-end pr-8 sm:pr-16">
+                <p className="text-xs sm:text-base md:text-lg font-mono tracking-wider sm:tracking-widest" 
                    style={{textShadow: '0 2px 8px rgba(0,0,0,0.9)'}}>
                   {currentUser?.numeroComplet || '•••• •••• •••• ••••'}
                 </p>
@@ -54,22 +54,22 @@ export default function MainPage({
               
               {/* Titulaire et Date d'expiration */}
               <div className="flex justify-between items-end">
-                <div>
-                  <p className="text-xs opacity-90 mb-1" 
+                <div className="flex-1 min-w-0 pr-2">
+                  <p className="text-[10px] sm:text-xs opacity-90 mb-1" 
                      style={{textShadow: '0 2px 6px rgba(0,0,0,0.9)'}}>
                     TITULAIRE
                   </p>
-                  <p className="text-sm font-semibold tracking-wide" 
+                  <p className="text-xs sm:text-sm font-semibold tracking-wide truncate" 
                      style={{textShadow: '0 2px 8px rgba(0,0,0,0.9)'}}>
                     {formatCardName(currentUser?.nom)}
                   </p>
                 </div>
-                <div className="text-center absolute left-1/2 transform -translate-x-1/2 bottom-6">
-                  <p className="text-xs opacity-90 mb-1" 
+                <div className="text-center absolute left-1/2 transform -translate-x-1/2 bottom-4 sm:bottom-6">
+                  <p className="text-[10px] sm:text-xs opacity-90 mb-1" 
                      style={{textShadow: '0 2px 6px rgba(0,0,0,0.9)'}}>
                     EXPIRE FIN
                   </p>
-                  <p className="text-sm font-semibold" 
+                  <p className="text-xs sm:text-sm font-semibold" 
                      style={{textShadow: '0 2px 8px rgba(0,0,0,0.9)'}}>
                     {currentUser?.exp || 'MM/AA'}
                   </p>
@@ -127,7 +127,7 @@ export default function MainPage({
           className="w-full bg-white rounded-xl shadow-sm p-4 flex items-center justify-between hover:shadow-md transition"
         >
           <h2 className="text-lg font-bold text-gray-900">Gérer ma carte</h2>
-          {optionsOpen ? <ChevronUp size={24} className="text-gray-600" /> : <ChevronDown size={24} className="text-gray-600" />}
+          {optionsOpen ? <ChevronUp size={24} className="text-gray-600" /> : <ChevronDown size={24} className="text-gray-400" />}
         </button>
 
         {optionsOpen && (
