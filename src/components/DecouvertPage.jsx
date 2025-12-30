@@ -4,7 +4,7 @@ import NavBar from "./NavBar";
 
 export default function DecouvertPage({ currentUser }) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-400 to-emerald-500 p-4">
+    <div className="min-h-screen bg-emerald-400 to-emerald-500 p-4">
       <div className="max-w-xl mx-auto space-y-3">
         <div className="bg-emerald-50 p-5 rounded-xl mb-3">
           <p className="text-gray-700 font-semibold text-sm">Découvert autorisé</p>

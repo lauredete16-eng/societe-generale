@@ -139,7 +139,7 @@ export default function AssurancesPage({ navigateTo }) {
         </div>
 
         {/* Contact assistance */}
-        <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-xl shadow-lg p-6 text-white mb-6">
+        <div className="bg-red-600 to-red-700 rounded-xl shadow-lg p-6 text-white mb-6">
           <div className="flex items-center gap-3 mb-4">
             <Phone size={24} />
             <h3 className="text-lg font-bold">Assistance 24h/24</h3>
