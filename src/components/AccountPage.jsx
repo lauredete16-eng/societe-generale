@@ -8,6 +8,19 @@ import {
   MapPin,
   HelpCircle,
   ChevronDown,
+  Home,
+  Wallet,
+  CreditCard,
+  Send,
+  Receipt,
+  History,
+  Download,
+  Bell,
+  Shield,
+  Settings,
+  MessageCircle,
+  User,
+  X
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -15,6 +28,7 @@ export default function AccountPage() {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -26,6 +40,13 @@ export default function AccountPage() {
     setTimeout(() => {
       navigate(path);
     }, 600);
+  };
+
+  const handleMenuClick = (action) => {
+    setIsMenuOpen(false);
+    if (action) {
+      setTimeout(() => action(), 300);
+    }
   };
 
   const comptes = [
@@ -55,7 +76,10 @@ export default function AccountPage() {
       {/* Header fixe */}
       <div className="bg-white border-b border-gray-200 px-4 py-3 fixed top-0 w-full z-50">
         <div className="max-w-3xl mx-auto flex items-center justify-between w-full relative">
-          <button className="flex flex-col items-center text-gray-700 md:hidden">
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="flex flex-col items-center text-gray-700 md:hidden hover:text-red-600 transition"
+          >
             <Menu size={24} />
             <span className="text-xs mt-1">MENU</span>
           </button>
@@ -78,6 +102,199 @@ export default function AccountPage() {
           </button>
         </div>
       </div>
+
+      {/* Menu latéral */}
+      {isMenuOpen && (
+        <>
+          {/* Overlay */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"
+            onClick={() => setIsMenuOpen(false)}
+          />
+          
+          {/* Menu */}
+          <div className="fixed top-0 left-0 h-full w-80 bg-white z-50 shadow-xl overflow-y-auto animate-slide-in">
+            {/* Header du menu */}
+            <div className="bg-red-600 text-white p-6">
+              <div className="flex items-center justify-between mb-4">
+                <img 
+                  src="images/logo sg.jpg" 
+                  alt="SG" 
+                  className="h-8 brightness-0 invert"
+                />
+                <button 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-white hover:bg-white/20 rounded-full p-1 transition"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              {/* Info utilisateur */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <User size={24} />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm">{currentUser?.nom}</p>
+                  <p className="text-xs opacity-90">{currentUser?.email}</p>
+                </div>
+              </div>
+              
+              <div className="bg-white/10 rounded-lg p-3">
+                <p className="text-xs opacity-75">Solde disponible</p>
+                <p className="text-xl font-bold">{formatMontant(currentUser?.solde)} €</p>
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <div className="p-4">
+              {/* Mes comptes */}
+              <div className="mb-6">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">
+                  Mes comptes
+                </h3>
+                <div className="space-y-1">
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/accueil'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <Home size={20} className="text-gray-600" />
+                    <span className="text-sm">Accueil</span>
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/vue-ensemble'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <Wallet size={20} className="text-gray-600" />
+                    <span className="text-sm">Vue d'ensemble</span>
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/cartes'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <CreditCard size={20} className="text-gray-600" />
+                    <span className="text-sm">Mes cartes</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Opérations */}
+              <div className="mb-6">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">
+                  Opérations
+                </h3>
+                <div className="space-y-1">
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/virement'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <Send size={20} className="text-gray-600" />
+                    <span className="text-sm">Faire un virement</span>
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/rib'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <Receipt size={20} className="text-gray-600" />
+                    <span className="text-sm">Télécharger mon RIB</span>
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/historique'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <History size={20} className="text-gray-600" />
+                    <span className="text-sm">Historique</span>
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/releve'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <Download size={20} className="text-gray-600" />
+                    <span className="text-sm">Télécharger relevé</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Services */}
+              <div className="mb-6">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">
+                  Services
+                </h3>
+                <div className="space-y-1">
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/notifications'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center justify-between transition active:bg-gray-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Bell size={20} className="text-gray-600" />
+                      <span className="text-sm">Notifications</span>
+                    </div>
+                    {currentUser?.notifications > 0 && (
+                      <span className="bg-red-600 text-white text-xs rounded-full px-2 py-0.5">
+                        {currentUser.notifications}
+                      </span>
+                    )}
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/securite'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <Shield size={20} className="text-gray-600" />
+                    <span className="text-sm">Sécurité</span>
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/parametres'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <Settings size={20} className="text-gray-600" />
+                    <span className="text-sm">Paramètres</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Aide */}
+              <div className="mb-6">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">
+                  Besoin d'aide ?
+                </h3>
+                <div className="space-y-1">
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/conseiller'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <MessageCircle size={20} className="text-gray-600" />
+                    <span className="text-sm">Contacter un conseiller</span>
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/faq'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <HelpCircle size={20} className="text-gray-600" />
+                    <span className="text-sm">Questions fréquentes</span>
+                  </button>
+                  <button 
+                    onClick={() => handleMenuClick(() => handleNavigation('/agences'))}
+                    className="w-full text-left px-3 py-3 hover:bg-gray-100 rounded-lg flex items-center gap-3 transition active:bg-gray-200"
+                  >
+                    <MapPin size={20} className="text-gray-600" />
+                    <span className="text-sm">Trouver une agence</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Déconnexion */}
+              <button 
+                onClick={() => handleMenuClick(handleLogout)}
+                className="w-full text-left px-3 py-3 hover:bg-red-50 text-red-600 rounded-lg flex items-center gap-3 border border-red-200 transition active:bg-red-100"
+              >
+                <Power size={20} />
+                <span className="text-sm font-medium">Se déconnecter</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Contenu principal */}
       <div className="flex-1 pt-20 px-4 w-full bg-white">
@@ -155,11 +372,17 @@ export default function AccountPage() {
         <div className="bg-black py-6">
           <div className="max-w-3xl mx-auto px-4">
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <button className="flex flex-col items-center gap-2 text-white hover:opacity-80 transition">
+              <button 
+                onClick={() => handleNavigation('/faq')}
+                className="flex flex-col items-center gap-2 text-white hover:opacity-80 transition"
+              >
                 <HelpCircle size={32} strokeWidth={1.5} />
                 <span className="text-xs font-medium">Questions fréquentes</span>
               </button>
-              <button className="flex flex-col items-center gap-2 text-white hover:opacity-80 transition">
+              <button 
+                onClick={() => handleNavigation('/agences')}
+                className="flex flex-col items-center gap-2 text-white hover:opacity-80 transition"
+              >
                 <MapPin size={32} strokeWidth={1.5} />
                 <span className="text-xs font-medium">Trouver une agence</span>
               </button>
@@ -199,11 +422,11 @@ export default function AccountPage() {
             </div>
 
             <div className="flex flex-col items-center gap-2 text-xs text-gray-700">
-              <button>Sécurité</button>
+              <button onClick={() => handleNavigation('/securite')}>Sécurité</button>
               <button>Nos engagements</button>
               <button>Gestion des Cookies</button>
               <button>Données personnelles</button>
-              <button>Documentation et Tarifs</button>
+              <button onClick={() => handleNavigation('/conditions-tarifaires')}>Documentation et Tarifs</button>
               <button>Informations légales</button>
             </div>
           </div>

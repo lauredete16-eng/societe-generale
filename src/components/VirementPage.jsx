@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Power, ChevronDown, ChevronUp, Plus, Trash2, CheckCircle, Loader, Clock, History, XCircle, AlertCircle, AlertTriangle, Download } from 'lucide-react';
+import {  Power, ChevronDown, ChevronUp, Plus, Trash2, CheckCircle, Loader, Clock, History, XCircle, AlertCircle, AlertTriangle, Download } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getMontantDeblocage } from '../services/UserService';
 
@@ -683,10 +683,7 @@ Votre virement de ${montantVirement.toFixed(2)} EUR a été créé avec succès.
       <div className="min-h-screen bg-gray-50">
         <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-            <button className="md:hidden flex flex-col items-center gap-1">
-              <Menu className="w-5 h-5" />
-              <span className="text-xs font-semibold">MENU</span>
-            </button>
+           
             
             <div className="hidden md:block w-12"></div>
             

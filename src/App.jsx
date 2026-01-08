@@ -8,6 +8,15 @@ import CartesPage from "./components/CartesPage";
 import ProfilPage from "./components/ProfilPage";
 import ParametresPage from "./components/ParametresPage";
 import DepotPage from "./components/DepotPage";
+import VueEnsemblePage from "./components/VueEnsemblePage";
+import RibPage from "./components/RibPage";
+import HistoriquePage from "./components/HistoriquePage";
+import RelevePage from "./components/RelevePage";
+import NotificationsPage from "./components/NotificationsPage";
+import SecuritePage from "./components/SecuritePage";
+import ConseillerPage from "./components/ConseillerPage";
+import FaqPage from "./components/FaqPage";
+import AgencesPage from "./components/AgencesPage";
 import AssurancesPage from "./pages/AssurancesPage";
 import ConditionsTarifaires from "./pages/ConditionsTarifaires";
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -136,6 +145,87 @@ function AppRoutes() {
         element={
           <PrivateRoute>
             <DepotPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/vue-ensemble"
+        element={
+          <PrivateRoute>
+            <VueEnsemblePage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/rib"
+        element={
+          <PrivateRoute>
+            <RibPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/historique"
+        element={
+          <PrivateRoute>
+            <HistoriquePage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/releve"
+        element={
+          <PrivateRoute>
+            <RelevePage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/notifications"
+        element={
+          <PrivateRoute>
+            <NotificationsPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/securite"
+        element={
+          <PrivateRoute>
+            <SecuritePage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/conseiller"
+        element={
+          <PrivateRoute>
+            <ConseillerPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/faq"
+        element={
+          <PrivateRoute>
+            <FaqPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/agences"
+        element={
+          <PrivateRoute>
+            <AgencesPage />
           </PrivateRoute>
         }
       />
