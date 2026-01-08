@@ -31,7 +31,7 @@ export const usersDB = {
     carte: "4567",
     numeroComplet: "4567 8912 3456 7890",
     exp: "12/25",
-    decouvertAutorise: 500,
+    decouvertAutorise: 700,
     decouvertUtilise: 0,
     compteBloque: true,
     notifications: 2,
