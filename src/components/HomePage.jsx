@@ -34,7 +34,7 @@ export default function HomePage() {
 
         {/* Menu déroulant */}
         {menuOpen && (
-          <div className="bg-white border-t border-gray-200 px-4 py-4 space-y-2 shadow-lg">
+          <div className="bg-white border-t border-gray-200 px-4 py-4 space-y-2 shadow-lg relative">
             <button onClick={() => setMenuOpen(false)} className="absolute top-3 right-4 text-gray-500">
               <X size={22} />
             </button>
@@ -47,9 +47,13 @@ export default function HomePage() {
         )}
       </header>
 
-      {/* ===== BANNIÈRE PRINCIPALE ===== */}
+      {/* ===== BANNIÈRE PRINCIPALE - IMAGE I1 ===== */}
       <section className="bg-blue-50 px-4 py-8">
         <div className="max-w-xl mx-auto">
+          {/* Image I1 en haut de la bannière */}
+          <div className="rounded-2xl overflow-hidden mb-6">
+            <img src="images/I7.jpeg" alt="Offre Société Générale" className="w-full object-cover" />
+          </div>
           <h1 className="text-3xl font-extrabold text-gray-900 leading-tight mb-4">
             votre cotisation Sobrio à 1 € / mois la première année
             <sup className="text-sm font-normal">(1)(2)(3)</sup>
@@ -75,12 +79,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== OFFRE DE BIENVENUE ===== */}
+      {/* ===== OFFRE DE BIENVENUE - IMAGE I2 ===== */}
       <section className="max-w-xl mx-auto px-4 py-6">
-        <div className="rounded-2xl overflow-hidden relative bg-gradient-to-r from-orange-400 to-purple-700 min-h-[180px] flex items-end">
-          {/* Espace image */}
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-400/80 to-purple-700/80" />
-          <div className="relative z-10 p-5">
+        <div className="rounded-2xl overflow-hidden relative">
+          <img src="images/I8.jpeg" alt="Offre de bienvenue" className="w-full object-cover" />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-purple-900/90 to-transparent p-5">
             <span className="bg-gray-900 text-white text-xs font-bold px-3 py-1 rounded mb-3 inline-block">
               OFFRE DE BIENVENUE
             </span>
@@ -97,14 +100,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== DEVENEZ CLIENT - CARTE ===== */}
+      {/* ===== DEVENEZ CLIENT - CARTE - IMAGE I3 ===== */}
       <section className="max-w-xl mx-auto px-4 py-4">
-        <div className="rounded-2xl overflow-hidden relative bg-gray-200 min-h-[200px] flex items-end">
-          {/* Espace pour image carte bancaire */}
-          <div className="w-full h-48 bg-gray-300 flex items-center justify-center text-gray-400 text-sm">
-            [ Image carte bancaire ]
-          </div>
-          <div className="absolute bottom-0 right-0 p-4">
+        <div className="rounded-2xl overflow-hidden relative">
+          <img src="images/I1.jpeg" alt="Ouvrir un compte" className="w-full object-cover" />
+          <div className="absolute bottom-0 right-0 p-4 bg-gradient-to-t from-gray-900/80 to-transparent w-full">
             <span className="bg-gray-800 text-white text-xs font-bold px-3 py-1 rounded mb-2 inline-block">
               DEVENEZ CLIENT
             </span>
@@ -199,11 +199,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== ON S'ADAPTE ===== */}
+      {/* ===== ON S'ADAPTE - IMAGE I4 ===== */}
       <section className="max-w-xl mx-auto px-4 py-8">
-        {/* Espace image famille */}
-        <div className="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center text-gray-400 text-sm mb-6">
-          [ Image famille ]
+        <div className="rounded-xl overflow-hidden mb-6">
+          <img src="images/I2.jpeg" alt="On s'adapte" className="w-full object-cover" />
         </div>
         <h2 className="text-2xl font-extrabold mb-2">On s'adapte. À vos projets, votre vie, à vous.</h2>
         <p className="text-gray-500 text-sm mb-5">Découvrez toutes nos solutions en fonction de votre besoin.</p>
@@ -249,12 +248,11 @@ export default function HomePage() {
         </button>
       </section>
 
-      {/* ===== L'APPLI SG ===== */}
+      {/* ===== L'APPLI SG - IMAGE I5 ===== */}
       <section className="bg-pink-50 px-4 py-8">
         <div className="max-w-xl mx-auto">
-          {/* Espace image mockup téléphone */}
-          <div className="w-full h-64 bg-pink-200 rounded-xl flex items-center justify-center text-pink-400 text-sm mb-6">
-            [ Image mockup appli SG ]
+          <div className="rounded-xl overflow-hidden mb-6">
+            <img src="images/I3.jpeg" alt="L'Appli SG" className="w-full object-cover" />
           </div>
           <h2 className="text-2xl font-extrabold mb-4">
             <span className="text-red-600">L'Appli SG</span>, votre banque au bout des doigts
@@ -280,21 +278,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== CONSEILS VIDÉOS ===== */}
+      {/* ===== CONSEILS VIDÉOS - IMAGE I6 ===== */}
       <section className="bg-blue-900 px-4 py-8">
         <div className="max-w-xl mx-auto space-y-4">
           {[
-            "L'assurance auto est incontournable",
-            "Automates bancaires Cash Services",
-            "Placer son argent dans une assurance vie"
-          ].map((titre, i) => (
+            { titre: "L'assurance auto est incontournable", img: "images/I4.jpeg" },
+            { titre: "Automates bancaires Cash Services", img: "images/I5.jpeg" },
+            { titre: "Placer son argent dans une assurance vie", img: "images/I6.jpeg" }
+          ].map((item, i) => (
             <div key={i} className="bg-white rounded-xl overflow-hidden">
-              <div className="w-full h-40 bg-gray-300 flex items-center justify-center text-gray-400 text-sm relative">
-                [ Image vidéo ]
+              <div className="relative">
+                <img src={item.img} alt={item.titre} className="w-full h-40 object-cover" />
                 <span className="absolute top-3 left-3 bg-gray-900 text-white text-xs font-bold px-2 py-1 rounded">5 MIN</span>
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-base mb-2">{titre}</h3>
+                <h3 className="font-bold text-base mb-2">{item.titre}</h3>
                 <span className="text-red-600 font-semibold text-sm flex items-center gap-1 cursor-pointer">
                   Voir la vidéo <ChevronRight size={16} />
                 </span>
@@ -309,8 +307,8 @@ export default function HomePage() {
 
       {/* ===== SATISFACTION ===== */}
       <section className="max-w-xl mx-auto px-4 py-8">
-        <div className="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center text-gray-400 text-sm mb-5 relative">
-          [ Image satisfaction client ]
+        <div className="relative rounded-xl overflow-hidden mb-5">
+          <img src="images/I4.jpeg" alt="Satisfaction client" className="w-full h-48 object-cover" />
           <div className="absolute top-4 left-4 bg-white px-3 py-2 rounded-lg shadow text-yellow-400 text-xl">
             ★★★★☆
           </div>
