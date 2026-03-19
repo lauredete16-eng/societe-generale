@@ -100,27 +100,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== DEVENEZ CLIENT - CARTE - IMAGE I3 ===== */}
-      <section className="max-w-xl mx-auto px-4 py-4">
-        <div className="rounded-2xl overflow-hidden relative">
-          <img src="images/I1.jpeg" alt="Ouvrir un compte" className="w-full object-cover" />
-          <div className="absolute bottom-0 right-0 p-4 bg-gradient-to-t from-gray-900/80 to-transparent w-full">
-            <span className="bg-gray-800 text-white text-xs font-bold px-3 py-1 rounded mb-2 inline-block">
-              DEVENEZ CLIENT
-            </span>
-            <h3 className="text-white text-lg font-bold leading-snug mb-2">
-              Gagnez du temps en ouvrant en ligne votre 1<sup>er</sup> compte bancaire.
-            </h3>
-            <button
-              onClick={() => navigate("/login")}
-              className="bg-white text-red-600 font-bold py-2 px-5 rounded-full text-sm"
-            >
-              J'en profite
-            </button>
-          </div>
-        </div>
-      </section>
-
       {/* ===== LES AVANTAGES DE SG ===== */}
       <section className="max-w-xl mx-auto px-4 py-8">
         <h2 className="text-2xl font-extrabold text-center mb-6">Les avantages de SG</h2>
@@ -202,7 +181,7 @@ export default function HomePage() {
       {/* ===== ON S'ADAPTE - IMAGE I4 ===== */}
       <section className="max-w-xl mx-auto px-4 py-8">
         <div className="rounded-xl overflow-hidden mb-6">
-          <img src="images/I2.jpeg" alt="On s'adapte" className="w-full object-cover" />
+          <img src="images/I1.jpeg" alt="On s'adapte" className="w-full object-cover" />
         </div>
         <h2 className="text-2xl font-extrabold mb-2">On s'adapte. À vos projets, votre vie, à vous.</h2>
         <p className="text-gray-500 text-sm mb-5">Découvrez toutes nos solutions en fonction de votre besoin.</p>
@@ -282,9 +261,9 @@ export default function HomePage() {
       <section className="bg-blue-900 px-4 py-8">
         <div className="max-w-xl mx-auto space-y-4">
           {[
-            { titre: "L'assurance auto est incontournable", img: "images/I4.jpeg" },
-            { titre: "Automates bancaires Cash Services", img: "images/I5.jpeg" },
-            { titre: "Placer son argent dans une assurance vie", img: "images/I6.jpeg" }
+            { titre: "L'assurance auto est incontournable", img: "images/I3.jpeg" },
+            { titre: "Automates bancaires Cash Services", img: "images/I4.jpeg" },
+            { titre: "Placer son argent dans une assurance vie", img: "images/I5.jpeg" }
           ].map((item, i) => (
             <div key={i} className="bg-white rounded-xl overflow-hidden">
               <div className="relative">
@@ -308,7 +287,7 @@ export default function HomePage() {
       {/* ===== SATISFACTION ===== */}
       <section className="max-w-xl mx-auto px-4 py-8">
         <div className="relative rounded-xl overflow-hidden mb-5">
-          <img src="images/I4.jpeg" alt="Satisfaction client" className="w-full h-48 object-cover" />
+          <img src="images/I6.jpeg" alt="Satisfaction client" className="w-full h-48 object-cover" />
           <div className="absolute top-4 left-4 bg-white px-3 py-2 rounded-lg shadow text-yellow-400 text-xl">
             ★★★★☆
           </div>
