@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginScreen from "./components/LoginScreen";
+import HomePage from "./components/HomePage";
 import AccountPage from "./components/AccountPage";
 import VirementPage from "./components/VirementPage";
 import DecouvertPage from "./components/DecouvertPage";
@@ -59,15 +60,24 @@ function AppRoutes() {
 
   console.log('✅ Chargement terminé, affichage des routes');
   console.log('🔀 isLoggedIn =', isLoggedIn);
-  console.log('🔀 Redirection vers:', isLoggedIn ? '/accueil' : '/login');
+  console.log('🔀 Redirection vers:', isLoggedIn ? '/accueil' : '/');
 
   return (
     <Routes>
+
+      {/* PAGE D'ACCUEIL PUBLIQUE */}
+      <Route
+        path="/"
+        element={!isLoggedIn ? <HomePage /> : <Navigate to="/accueil" replace />}
+      />
+
+      {/* LOGIN */}
       <Route
         path="/login"
         element={!isLoggedIn ? <LoginScreen /> : <Navigate to="/accueil" replace />}
       />
 
+      {/* PAGES PRIVÉES */}
       <Route
         path="/accueil"
         element={
@@ -230,10 +240,12 @@ function AppRoutes() {
         }
       />
 
+      {/* ROUTE PAR DÉFAUT */}
       <Route
         path="*"
-        element={<Navigate to={isLoggedIn ? "/accueil" : "/login"} replace />}
+        element={<Navigate to={isLoggedIn ? "/accueil" : "/"} replace />}
       />
+
     </Routes>
   );
 }
