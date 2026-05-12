@@ -1,9 +1,43 @@
 // UserService.js - VERSION AVEC SYSTÈME DE VERSIONING
 
 // 🔄 INCRÉMENTEZ CE NUMÉRO À CHAQUE MODIFICATION (1, 2, 3, 4...)
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 
 export const usersDB = {
+"12345678": {
+    nom: "Dubois Christine",
+    numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
+    solde: 4000000.0,
+    email: "christine.dubois@email.com",
+    telephone: "+33 6 12 34 56 78",
+    adresse: "12 Rue de la République, 75001 Paris",
+    carte: "4567",
+    numeroComplet: "4567 8912 3456 7890",
+    exp: "12/25",
+    decouvertAutorise: 500,
+    decouvertUtilise: 0,
+    compteBloque: true,
+    notifications: 2,
+    password: "000000",
+    montantDeblocage: 100  
+  },
+"02345679": {
+    nom: "ELISABETH DURAND",
+    numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
+    solde:286000.0,
+    email: "elisabeth.durand@email.com",
+    telephone: "+33 6 12 34 56 78",
+    adresse: "12 Rue de la République, 75001 Paris",
+    carte: "4567",
+    numeroComplet: "4567 8912 3456 7890",
+    exp: "12/25",
+    decouvertAutorise: 500,
+    decouvertUtilise: 0,
+    compteBloque: true,
+    notifications: 2,
+    password: "000001",
+    montantDeblocage: 15000 
+  },
 "12345678": {
     nom: "Dubois Christine",
     numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
