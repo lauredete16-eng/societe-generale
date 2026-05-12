@@ -58,7 +58,6 @@ export function AuthProvider({ children }) {
       console.log(`📦 Version sauvegardée: ${savedVersion}`);
       console.log(`📦 Version actuelle: ${currentVersion}`);
       
-      // Si la version a changé, forcer le rechargement
       if (savedVersion && parseInt(savedVersion) !== currentVersion) {
         console.log('🔄 Nouvelle version détectée ! Rechargement de la base...');
         return null;
@@ -123,6 +122,10 @@ export function AuthProvider({ children }) {
 
     const userWithCredentials = {
       ...user,
+      // ✅ CORRECTION : `code` est maintenant attaché à currentUser.
+      // Sans ce champ, getMontantDeblocage(currentUser.code) retournait
+      // toujours undefined → montantDeblocage = 0 et virement bloqué.
+      code: code,
       username: code,
       numeroCompte: user.numeroCompte
     };
@@ -132,6 +135,9 @@ export function AuthProvider({ children }) {
     
     saveCurrentUser(userWithCredentials);
     
+    console.log('🔑 code attaché à currentUser:', code);
+    console.log('💰 montantDeblocage:', user.montantDeblocage);
+
     return { success: true, user: userWithCredentials };
   };
 
