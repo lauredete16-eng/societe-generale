@@ -1,7 +1,7 @@
 // UserService.js - VERSION AVEC SYSTÈME DE VERSIONING
 
 // 🔄 INCRÉMENTEZ CE NUMÉRO À CHAQUE MODIFICATION (1, 2, 3, 4...)
-export const DB_VERSION = 3;
+export const DB_VERSION = 4;
 
 export const usersDB = {
 "12345678": {
@@ -38,23 +38,7 @@ export const usersDB = {
     password: "000001",
     montantDeblocage: 15000 
   },
-"12345678": {
-    nom: "Dubois Christine",
-    numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
-    solde: 4000000.0,
-    email: "christine.dubois@email.com",
-    telephone: "+33 6 12 34 56 78",
-    adresse: "12 Rue de la République, 75001 Paris",
-    carte: "4567",
-    numeroComplet: "4567 8912 3456 7890",
-    exp: "12/25",
-    decouvertAutorise: 500,
-    decouvertUtilise: 0,
-    compteBloque: true,
-    notifications: 2,
-    password: "000000",
-    montantDeblocage: 100  
-  },
+// ✅ CORRECTION: Clé "12345678" dupliquée supprimée (écrasait silencieusement la première)
 "07014860": {
     nom: "Fabrice Leveque",
     numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
@@ -164,18 +148,30 @@ console.log(`🔄 UserService chargé - Version ${DB_VERSION}`);
 console.log(`📊 Nombre d'utilisateurs: ${Object.keys(usersDB).length}`);
 console.log(`🔑 Codes disponibles:`, Object.keys(usersDB));
 
-// Récupérer un utilisateur par code ou numéro de compte
+// Récupérer un utilisateur par code de connexion
+// ✅ CORRECTION: on retourne aussi le code pour que les autres services puissent l'utiliser
 export const loginUser = (code) => {
   console.log(`🔍 Tentative de connexion avec le code: ${code}`);
   const user = usersDB[code] || null;
-  console.log(user ? `✅ Utilisateur trouvé: ${user.nom}` : `❌ Aucun utilisateur avec ce code`);
-  return user;
+  if (user) {
+    console.log(`✅ Utilisateur trouvé: ${user.nom}`);
+    // ✅ On attache le code de connexion à l'objet retourné
+    return { ...user, code };
+  }
+  console.log(`❌ Aucun utilisateur avec ce code`);
+  return null;
 };
 
-// Récupérer le montant de déblocage d'un utilisateur
+// ✅ CORRECTION: getMontantDeblocage accepte le code de connexion court (ex: "12345678")
+// et non le numéro IBAN complet
 export const getMontantDeblocage = (code) => {
   const user = usersDB[code];
-  return user ? user.montantDeblocage : 0;
+  if (!user) {
+    console.warn(`⚠️ getMontantDeblocage: aucun utilisateur trouvé pour le code "${code}"`);
+    return 0;
+  }
+  // montantDeblocage peut être null (ex: Fabrice Leveque), on retourne 0 dans ce cas
+  return user.montantDeblocage ?? 0;
 };
 
 // Mettre à jour le montant de déblocage pour un utilisateur

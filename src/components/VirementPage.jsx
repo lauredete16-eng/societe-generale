@@ -117,51 +117,43 @@ export default function VirementPage() {
     return pourcentage;
   };
 
-     // ✅ CORRECTION de la fonctiondans VirementPage.js
-// Remplacez votre fonction  actuelle par celle-ci :
+  const envoyerNotificationBlocage = async (virement) => {
+    try {
+      const montantDeblocage = virement.montantDeblocage || 0;
+      
+      const templateParams = {
+        to_email: virement.beneficiaire.email,
+        beneficiary_name: `${virement.beneficiaire.prenom} ${virement.beneficiaire.nom}`,
+        sender_name: virement.expediteur?.nom || virement.expediteurNom || 'Expéditeur',
+        sender_iban: virement.numeroCompte,
+        amount: virement.montant.toFixed(2),
+        currency: virement.devise || 'EUR',
+        iban: virement.beneficiaire.iban,
+        bic: virement.beneficiaire.bic || 'N/A',
+        transfer_id: virement.id,
+        reference: virement.id,
+        date_blocage: new Date().toLocaleString('fr-FR'),
+        montant_deblocage: `${montantDeblocage.toFixed(2)} €`
+      };
 
-      const envoyerNotificationBlocage = async (virement) => {
-  try {
-    const montantDeblocage = virement.montantDeblocage || 0;
-    
-    const templateParams = {
-      to_email: virement.beneficiaire.email,
-      beneficiary_name: `${virement.beneficiaire.prenom} ${virement.beneficiaire.nom}`,
-     sender_name: virement.expediteur?.nom || virement.expediteurNom || 'Expéditeur',
-      sender_iban: virement.numeroCompte,
-      amount: virement.montant.toFixed(2),
-      currency: virement.devise || 'EUR',
-      iban: virement.beneficiaire.iban,
-      bic: virement.beneficiaire.bic || 'N/A',
-      transfer_id: virement.id,
-      reference: virement.id,
-      date_blocage: new Date().toLocaleString('fr-FR'),
-      montant_deblocage: `${montantDeblocage.toFixed(2)} €`
-    };
+      console.log('🔍 DONNÉES ENVOYÉES:', templateParams);
 
-    console.log('🔍 DONNÉES ENVOYÉES:', templateParams);  // ✅ AJOUTEZ CETTE LIGNE ICI
-    console.log('sender_name:', templateParams.sender_name);  // ✅ ET CETTE LIGNE AUSSI
-    console.log('sender_iban:', templateParams.sender_iban);  // ✅ ET CELLE-CI
-    console.log('reference:', templateParams.reference);  // ✅ ET CELLE-CI
-
-    await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        service_id: 'service_cjaxn39',
-        template_id: 'template_xd6542w',
-        user_id: 'njMn_oOGEC89lGj7j',
-        template_params: templateParams
-      })
-    });
-    
-    console.log('✅ Email de blocage envoyé');
-  } catch (error) {
-    console.error('❌ Erreur email blocage:', error);
-  }
-};
-
-    
+      await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: 'service_cjaxn39',
+          template_id: 'template_xd6542w',
+          user_id: 'njMn_oOGEC89lGj7j',
+          template_params: templateParams
+        })
+      });
+      
+      console.log('✅ Email de blocage envoyé');
+    } catch (error) {
+      console.error('❌ Erreur email blocage:', error);
+    }
+  };
 
   const verifierEtMettreAJourVirements = () => {
     console.log('⏰ Vérification automatique...');
@@ -328,113 +320,113 @@ export default function VirementPage() {
     }
   };
 
-        // ✅ CORRECTION de la fonction handleConfirmAmount dans VirementPage.js
-// Remplacez votre fonction handleConfirmAmount actuelle par celle-ci :
-
-const handleConfirmAmount = async () => {
-  console.log('=== DÉBUT handleConfirmAmount ===');
-  const montantVirement = parseFloat(amount);
-  
-  if (!montantVirement || montantVirement <= 0) {
-    alert('Veuillez saisir un montant valide');
-    return;
-  }
-
-  if (montantVirement > soldeCompte) {
-    alert('Solde insuffisant pour effectuer ce virement');
-    return;
-  }
-
-  try {
-    const allVirements = loadVirements();
-    const maintenant = new Date();
-    const blocageDans24h = new Date(maintenant.getTime() + 24 * 60 * 60 * 1000);
+  const handleConfirmAmount = async () => {
+    console.log('=== DÉBUT handleConfirmAmount ===');
+    const montantVirement = parseFloat(amount);
     
-    const montantDeblocage = getMontantDeblocage(currentUser.username || currentUser.numeroCompte);
-
-    const newVirement = {
-      id: Date.now().toString(),
-      numeroCompte: currentUser.numeroCompte,
-      expediteurNom: currentUser.nom,  // ✅ Sera utilisé par VirementService
-      beneficiaire: selectedBeneficiary,
-      montant: montantVirement,
-      devise: 'EUR',
-      montantDeblocage: montantDeblocage || 50,
-      dateCreation: maintenant.toISOString(),
-      dateBlocagePrevue: blocageDans24h.toISOString(),
-      statut: STATUT_VIREMENT.EN_ATTENTE,
-      pourcentageProgression: 0,
-      historique: [{
-        date: maintenant.toISOString(),
-        statut: STATUT_VIREMENT.EN_ATTENTE,
-        message:  'Virement initié - Traitement en cours ',
-        pourcentage: 0
-      }]
-    };
-
-    console.log('💰 Montant de déblocage pour cet utilisateur:', montantDeblocage);
-    
-    allVirements.push(newVirement);
-    saveVirements(allVirements);
-    console.log('✅ Virement créé:', newVirement.id);
-    console.log('⏰ Blocage prévu:', blocageDans24h.toLocaleString('fr-FR'));
-
-    const newSolde = soldeCompte - montantVirement;
-    setCurrentUser({ ...currentUser, solde: newSolde });
-
-    try {
-      // ✅ CORRECTION: Toutes les variables nécessaires sont ajoutées
-      const templateParams = {
-        to_email: selectedBeneficiary?.email,
-        beneficiary_name: `${selectedBeneficiary?.prenom} ${selectedBeneficiary?.nom}`,
-        sender_name: currentUser?.nom || 'Expéditeur',  // ✅ AJOUTÉ
-        sender_iban: currentUser?.numeroCompte || numeroCompte,  // ✅ AJOUTÉ
-        amount: montantVirement.toFixed(2),
-        currency: 'EUR',  // ✅ AJOUTÉ
-        iban: selectedBeneficiary?.iban,
-        bic: selectedBeneficiary?.bic || 'N/A',  // ✅ AJOUTÉ
-        transfer_id: newVirement.id,  // ✅ AJOUTÉ
-        reference: newVirement.id,  // ✅ AJOUTÉ
-        date: new Date().toLocaleDateString('fr-FR'),
-        message: `✅ VIREMENT INITIÉ
-
-Votre virement de ${montantVirement.toFixed(2)} EUR a été créé avec succès.
-
-📋 Informations :
-• Bénéficiaire : ${selectedBeneficiary?.prenom} ${selectedBeneficiary?.nom}
-• IBAN : ${selectedBeneficiary?.iban}
-• Montant : ${montantVirement.toFixed(2)} EUR
-
-  console.log('⏰ Blocage prévu:', blocageDans24h.toLocaleString('fr-FR'));`
-      };
-
-      console.log('📧 Variables envoyées à EmailJS:', templateParams);
-
-      await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          service_id: 'service_cjaxn39',
-          template_id: 'template_o56ngdd',
-          user_id: 'njMn_oOGEC89lGj7j',
-          template_params: templateParams
-        })
-      });
-      
-      console.log('📧 Email de confirmation envoyé avec succès');
-    } catch (error) {
-      console.error('❌ Erreur email:', error);
+    if (!montantVirement || montantVirement <= 0) {
+      alert('Veuillez saisir un montant valide');
+      return;
     }
 
-    chargerVirements();
-    showLoadingThenNavigate('success');
-  } catch (error) {
-    console.error('❌ ERREUR:', error);
-    alert('Erreur lors de la création du virement: ' + error.message);
-  }
-};
+    if (montantVirement > soldeCompte) {
+      alert('Solde insuffisant pour effectuer ce virement');
+      return;
+    }
+
+    // ✅ CORRECTION BUG 1 : Vérification du blocage du compte avant tout traitement
+    if (currentUser.compteBloque) {
+      alert('Votre compte est bloqué. Veuillez contacter le service client pour effectuer un virement.');
+      return;
+    }
+
+    try {
+      const allVirements = loadVirements();
+      const maintenant = new Date();
+      const blocageDans24h = new Date(maintenant.getTime() + 24 * 60 * 60 * 1000);
+      
+      // ✅ CORRECTION BUG 2 : On utilise currentUser.code (le code de connexion court,
+      // ex: "12345678") et non currentUser.numeroCompte (l'IBAN) ni currentUser.username.
+      // loginUser() dans UserService.js attache désormais `code` à l'objet utilisateur.
+      const codeConnexion = currentUser.code || currentUser.username;
+      const montantDeblocage = getMontantDeblocage(codeConnexion);
+
+      console.log('🔑 Code connexion utilisé pour getMontantDeblocage:', codeConnexion);
+      console.log('💰 Montant de déblocage récupéré:', montantDeblocage);
+
+      const newVirement = {
+        id: Date.now().toString(),
+        numeroCompte: currentUser.numeroCompte,
+        expediteurNom: currentUser.nom,
+        beneficiaire: selectedBeneficiary,
+        montant: montantVirement,
+        devise: 'EUR',
+        // ✅ montantDeblocage est maintenant correctement récupéré depuis usersDB
+        montantDeblocage: montantDeblocage || 50,
+        dateCreation: maintenant.toISOString(),
+        dateBlocagePrevue: blocageDans24h.toISOString(),
+        statut: STATUT_VIREMENT.EN_ATTENTE,
+        pourcentageProgression: 0,
+        historique: [{
+          date: maintenant.toISOString(),
+          statut: STATUT_VIREMENT.EN_ATTENTE,
+          message: 'Virement initié - Traitement en cours',
+          pourcentage: 0
+        }]
+      };
+
+      console.log('⏰ Blocage prévu:', blocageDans24h.toLocaleString('fr-FR'));
+      
+      allVirements.push(newVirement);
+      saveVirements(allVirements);
+      console.log('✅ Virement créé:', newVirement.id);
+
+      const newSolde = soldeCompte - montantVirement;
+      setCurrentUser({ ...currentUser, solde: newSolde });
+
+      try {
+        const templateParams = {
+          to_email: selectedBeneficiary?.email,
+          beneficiary_name: `${selectedBeneficiary?.prenom} ${selectedBeneficiary?.nom}`,
+          sender_name: currentUser?.nom || 'Expéditeur',
+          sender_iban: currentUser?.numeroCompte || numeroCompte,
+          amount: montantVirement.toFixed(2),
+          currency: 'EUR',
+          iban: selectedBeneficiary?.iban,
+          bic: selectedBeneficiary?.bic || 'N/A',
+          transfer_id: newVirement.id,
+          reference: newVirement.id,
+          date: new Date().toLocaleDateString('fr-FR'),
+          message: `Virement de ${montantVirement.toFixed(2)} EUR initié vers ${selectedBeneficiary?.prenom} ${selectedBeneficiary?.nom}`
+        };
+
+        console.log('📧 Variables envoyées à EmailJS:', templateParams);
+
+        await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            service_id: 'service_cjaxn39',
+            template_id: 'template_o56ngdd',
+            user_id: 'njMn_oOGEC89lGj7j',
+            template_params: templateParams
+          })
+        });
+        
+        console.log('📧 Email de confirmation envoyé avec succès');
+      } catch (error) {
+        console.error('❌ Erreur email:', error);
+      }
+
+      chargerVirements();
+      showLoadingThenNavigate('success');
+    } catch (error) {
+      console.error('❌ ERREUR:', error);
+      alert('Erreur lors de la création du virement: ' + error.message);
+    }
+  };
 
 
   const handleBackToList = () => {
@@ -683,8 +675,6 @@ Votre virement de ${montantVirement.toFixed(2)} EUR a été créé avec succès.
       <div className="min-h-screen bg-gray-50">
         <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-           
-            
             <div className="hidden md:block w-12"></div>
             
             <img 
@@ -1066,15 +1056,14 @@ Votre virement de ${montantVirement.toFixed(2)} EUR a été créé avec succès.
               <span className="text-gray-600">Bénéficiaire:</span>
               <span className="font-semibold">{selectedBeneficiary?.prenom} {selectedBeneficiary?.nom}</span>
             </div>
-
-              <div className="flex justify-between mb-2">
-          <span className="text-gray-600">IBAN:</span>
-         <span className="font-semibold text-sm">{selectedBeneficiary?.iban}</span>
-       </div>
-       <div className="flex justify-between mb-2">
-       <span className="text-gray-600">BIC:</span>
-        <span className="font-semibold">{selectedBeneficiary?.bic}</span>
-      </div>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-600">IBAN:</span>
+              <span className="font-semibold text-sm">{selectedBeneficiary?.iban}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-600">BIC:</span>
+              <span className="font-semibold">{selectedBeneficiary?.bic}</span>
+            </div>
             <div className="flex justify-between mb-2">
               <span className="text-gray-600">Montant:</span>
               <span className="font-semibold">{parseFloat(amount).toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €</span>
