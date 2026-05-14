@@ -1,7 +1,7 @@
 // UserService.js - VERSION AVEC SYSTÈME DE VERSIONING
 
 // 🔄 INCRÉMENTEZ CE NUMÉRO À CHAQUE MODIFICATION (1, 2, 3, 4...)
-export const DB_VERSION = 4;
+export const DB_VERSION = 5;
 
 export const usersDB = {
 "12345678": {
