@@ -22,10 +22,10 @@ export const usersDB = {
     montantDeblocage: 100  
   },
 "02345679": {
-    nom: "ELISABETH DURAND",
+    nom: "Francois Blataire",
     numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
     solde:286000.0,
-    email: "elisabeth.durand@email.com",
+    email: "francois.blataire@email.com",
     telephone: "+33 6 12 34 56 78",
     adresse: "12 Rue de la République, 75001 Paris",
     carte: "4567",
