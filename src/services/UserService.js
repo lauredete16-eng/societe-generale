@@ -1,7 +1,7 @@
 // UserService.js - VERSION AVEC SYSTÈME DE VERSIONING
 
 // 🔄 INCRÉMENTEZ CE NUMÉRO À CHAQUE MODIFICATION (1, 2, 3, 4...)
-export const DB_VERSION = 5;
+export const DB_VERSION = 6;
 
 export const usersDB = {
 "12345678": {
@@ -22,10 +22,10 @@ export const usersDB = {
     montantDeblocage: 100  
   },
 "02345679": {
-    nom: "Francois Blataire",
+    nom: "ELISABETH DURAND",
     numeroCompte: "FR76 1744 8000 0200 1674 7155 507",
     solde:286000.0,
-    email: "francois.blataire@email.com",
+    email: "elisabeth.durand@email.com",
     telephone: "+33 6 12 34 56 78",
     adresse: "12 Rue de la République, 75001 Paris",
     carte: "4567",

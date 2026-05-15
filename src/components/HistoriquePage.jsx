@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Filter, TrendingUp, TrendingDown, Calendar, Download } from 'lucide-react';
+import { ArrowLeft, Search, TrendingUp, TrendingDown, Calendar, Download } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function HistoriquePage() {
@@ -10,7 +10,16 @@ export default function HistoriquePage() {
   const [filterType, setFilterType] = useState('all');
 
   const operations = [
-    { id: 1, date: '2026-01-08', libelle: 'Virement reçu - Salaire', montant: 2500, type: 'credit', categorie: 'Virement' },
+    { 
+      id: 1,
+      date: '2026-03-05',
+      libelle: 'Virement reçu',
+      expediteur: 'Francois Blataire',
+      montant: 286000,
+      type: 'credit',
+      categorie: 'Virement'
+    },
+
     { id: 2, date: '2026-01-07', libelle: 'Prélèvement EDF', montant: -85.50, type: 'debit', categorie: 'Facture' },
     { id: 3, date: '2026-01-06', libelle: 'Achat Carrefour', montant: -42.30, type: 'debit', categorie: 'Courses' },
     { id: 4, date: '2026-01-05', libelle: 'Virement émis', montant: -200, type: 'debit', categorie: 'Virement' },
@@ -28,8 +37,13 @@ export default function HistoriquePage() {
     return matchSearch && matchFilter;
   });
 
-  const totalCredit = operations.filter(op => op.type === 'credit').reduce((sum, op) => sum + op.montant, 0);
-  const totalDebit = operations.filter(op => op.type === 'debit').reduce((sum, op) => sum + Math.abs(op.montant), 0);
+  const totalCredit = operations
+    .filter(op => op.type === 'credit')
+    .reduce((sum, op) => sum + op.montant, 0);
+
+  const totalDebit = operations
+    .filter(op => op.type === 'debit')
+    .reduce((sum, op) => sum + Math.abs(op.montant), 0);
 
   const handleExportPDF = () => {
     alert('Export PDF en cours de développement...');
@@ -40,16 +54,18 @@ export default function HistoriquePage() {
       {/* Header */}
       <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center gap-4">
-          <button 
+          <button
             onClick={() => navigate('/compte')}
             className="p-2 hover:bg-gray-100 rounded-full transition"
           >
             <ArrowLeft size={24} />
           </button>
+
           <h1 className="text-xl font-bold flex-1">Historique</h1>
-          <img 
-            src="images/logo sg.jpg" 
-            alt="SG" 
+
+          <img
+            src="images/logo sg.jpg"
+            alt="SG"
             className="h-10 object-contain"
           />
         </div>
@@ -63,8 +79,11 @@ export default function HistoriquePage() {
               <TrendingUp size={20} className="text-green-600" />
               <p className="text-sm text-green-800">Crédits</p>
             </div>
+
             <p className="text-2xl font-bold text-green-700">
-              +{totalCredit.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €
+              +{totalCredit.toLocaleString('fr-FR', {
+                minimumFractionDigits: 2
+              })} €
             </p>
           </div>
 
@@ -73,17 +92,24 @@ export default function HistoriquePage() {
               <TrendingDown size={20} className="text-red-600" />
               <p className="text-sm text-red-800">Débits</p>
             </div>
+
             <p className="text-2xl font-bold text-red-700">
-              -{totalDebit.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €
+              -{totalDebit.toLocaleString('fr-FR', {
+                minimumFractionDigits: 2
+              })} €
             </p>
           </div>
         </div>
 
-        {/* Filtres et recherche */}
+        {/* Recherche */}
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="flex gap-3 mb-4">
             <div className="flex-1 relative">
-              <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search
+                size={20}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              />
+
               <input
                 type="text"
                 placeholder="Rechercher une opération..."
@@ -92,6 +118,7 @@ export default function HistoriquePage() {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
+
             <button
               onClick={handleExportPDF}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
@@ -101,32 +128,35 @@ export default function HistoriquePage() {
             </button>
           </div>
 
+          {/* Filtres */}
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setFilterType('all')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                filterType === 'all' 
-                  ? 'bg-red-600 text-white' 
+                filterType === 'all'
+                  ? 'bg-red-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               Tout
             </button>
+
             <button
               onClick={() => setFilterType('credit')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                filterType === 'credit' 
-                  ? 'bg-green-600 text-white' 
+                filterType === 'credit'
+                  ? 'bg-green-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               Crédits
             </button>
+
             <button
               onClick={() => setFilterType('debit')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                filterType === 'debit' 
-                  ? 'bg-orange-600 text-white' 
+                filterType === 'debit'
+                  ? 'bg-orange-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -140,37 +170,86 @@ export default function HistoriquePage() {
           {filteredOperations.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
               <Calendar size={48} className="mx-auto mb-4 text-gray-300" />
-              <p className="text-lg font-semibold mb-2">Aucune opération trouvée</p>
-              <p className="text-sm">Essayez de modifier vos critères de recherche</p>
+
+              <p className="text-lg font-semibold mb-2">
+                Aucune opération trouvée
+              </p>
+
+              <p className="text-sm">
+                Essayez de modifier vos critères de recherche
+              </p>
             </div>
           ) : (
             <div className="divide-y">
               {filteredOperations.map((op) => (
-                <div key={op.id} className="p-4 hover:bg-gray-50 transition">
+                <div
+                  key={op.id}
+                  className="p-4 hover:bg-gray-50 transition"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 flex-1">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        op.type === 'credit' ? 'bg-green-100' : 'bg-orange-100'
-                      }`}>
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          op.type === 'credit'
+                            ? 'bg-green-100'
+                            : 'bg-orange-100'
+                        }`}
+                      >
                         {op.type === 'credit' ? (
-                          <TrendingUp size={20} className="text-green-600" />
+                          <TrendingUp
+                            size={20}
+                            className="text-green-600"
+                          />
                         ) : (
-                          <TrendingDown size={20} className="text-orange-600" />
+                          <TrendingDown
+                            size={20}
+                            className="text-orange-600"
+                          />
                         )}
                       </div>
+
                       <div className="flex-1">
-                        <p className="font-semibold text-sm">{op.libelle}</p>
+                        <p className="font-semibold text-sm">
+                          {op.libelle}
+                        </p>
+
+                        {op.expediteur && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            De : {op.expediteur}
+                          </p>
+                        )}
+
+                        {op.destinataire && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Vers : {op.destinataire}
+                          </p>
+                        )}
+
                         <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                          <span>{new Date(op.date).toLocaleDateString('fr-FR')}</span>
+                          <span>
+                            {new Date(op.date).toLocaleDateString('fr-FR')}
+                          </span>
+
                           <span>•</span>
-                          <span className="px-2 py-0.5 bg-gray-100 rounded">{op.categorie}</span>
+
+                          <span className="px-2 py-0.5 bg-gray-100 rounded">
+                            {op.categorie}
+                          </span>
                         </div>
                       </div>
                     </div>
-                    <p className={`font-bold text-lg ${
-                      op.type === 'credit' ? 'text-green-600' : 'text-gray-900'
-                    }`}>
-                      {op.montant > 0 ? '+' : ''}{op.montant.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €
+
+                    <p
+                      className={`font-bold text-lg ${
+                        op.type === 'credit'
+                          ? 'text-green-600'
+                          : 'text-gray-900'
+                      }`}
+                    >
+                      {op.montant > 0 ? '+' : ''}
+                      {op.montant.toLocaleString('fr-FR', {
+                        minimumFractionDigits: 2
+                      })} €
                     </p>
                   </div>
                 </div>
@@ -182,7 +261,7 @@ export default function HistoriquePage() {
         {/* Info */}
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-800">
-            💡 Les opérations sont affichées du plus récent au plus ancien. 
+            💡 Les opérations sont affichées du plus récent au plus ancien.
             Utilisez les filtres pour affiner votre recherche.
           </p>
         </div>
