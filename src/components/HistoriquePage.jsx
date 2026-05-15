@@ -12,7 +12,7 @@ export default function HistoriquePage() {
   const operations = [
     { 
       id: 1,
-      date: '2026-03-05',
+      date: '2026-05-25',
       libelle: 'Virement reçu',
       expediteur: 'Francois Blataire',
       montant: 286000,
