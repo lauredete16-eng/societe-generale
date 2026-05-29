@@ -1,14 +1,9 @@
-// src/services/emailVerificationService.js
 import { db } from "../firebase.js";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
-import emailjs from "@emailjs/browser";
 
 const EMAILJS_SERVICE_ID  = "service_k4ziul8";
 const EMAILJS_TEMPLATE_ID = "template_ejo6psr";
 const EMAILJS_PUBLIC_KEY  = "D7vDC7RcrTFMzROoO";
-
-// Initialisation EmailJS (obligatoire en v4+)
-emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
 const CODE_EXPIRY_MS = 10 * 60 * 1000;
 
@@ -34,17 +29,28 @@ export const envoyerCodeVerification = async (email, prenom, contexte = "inscrip
         ? "Voici votre code de vérification pour confirmer votre connexion à votre espace Société Générale."
         : "Voici votre code de vérification pour finaliser la création de votre compte Société Générale.";
 
-    await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      {
-        email_to: email.trim().toLowerCase(),
-        prenom:   prenom || "Client",
-        code,
-        message,
-      },
-      { publicKey: EMAILJS_PUBLIC_KEY }
-    );
+    // Utilisation de l'API REST directement (pas de dépendance npm)
+    const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_id: EMAILJS_SERVICE_ID,
+        template_id: EMAILJS_TEMPLATE_ID,
+        user_id: EMAILJS_PUBLIC_KEY,
+        template_params: {
+          email_to: email.trim().toLowerCase(),
+          prenom: prenom || "Client",
+          code,
+          message,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("❌ EmailJS erreur:", response.status, errText);
+      return { success: false, message: "Impossible d'envoyer le code. Vérifiez votre email." };
+    }
 
     console.log("✅ Code envoyé à:", email);
     return { success: true };
