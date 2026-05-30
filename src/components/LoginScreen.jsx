@@ -1,11 +1,10 @@
-import React, { useState, useRef } from "react";
-import { Check, Eye, EyeOff, Mail, Phone, MapPin, Lock, ArrowLeft, RefreshCw, ShieldCheck } from "lucide-react";
+import React, { useState } from "react";
+import { Check, Eye, EyeOff, Mail, Phone, MapPin, Lock, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getDBVersion } from "../services/UserService.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { db } from "../firebase.js";
 import { doc, setDoc, getDoc, query, collection, where, getDocs } from "firebase/firestore";
-import { envoyerCodeVerification, verifierCode } from "../services/emailVerificationService.js";
 
 // ─── Helpers ─────────────────────────────────────────────────
 const genererCodeClient = async () => {
@@ -26,51 +25,6 @@ const genererIBAN = () => {
 
 const genererCarte = () => Math.floor(1000 + Math.random() * 9000).toString();
 
-// ─── Composant : Saisie du code OTP ──────────────────────────
-function OTPInput({ value, onChange }) {
-  const inputs = useRef([]);
-
-  const handleChange = (index, e) => {
-    const val = e.target.value.replace(/\D/g, "").slice(-1);
-    const chars = value.split("");
-    chars[index] = val;
-    onChange(chars.join(""));
-    if (val && index < 5) inputs.current[index + 1]?.focus();
-  };
-
-  const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !value[index] && index > 0) {
-      inputs.current[index - 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e) => {
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-    if (pasted) onChange(pasted.padEnd(6, "").slice(0, 6));
-    e.preventDefault();
-  };
-
-  return (
-    <div className="flex gap-3 justify-center my-6" onPaste={handlePaste}>
-      {Array.from({ length: 6 }).map((_, i) => (
-        <input
-          key={i}
-          ref={(el) => (inputs.current[i] = el)}
-          type="text"
-          inputMode="numeric"
-          maxLength={1}
-          value={value[i] || ""}
-          onChange={(e) => handleChange(i, e)}
-          onKeyDown={(e) => handleKeyDown(i, e)}
-          className="w-11 h-14 text-center text-2xl font-bold border-2 rounded-xl
-            focus:outline-none focus:border-red-600 focus:bg-red-50
-            border-gray-300 bg-white transition-all"
-        />
-      ))}
-    </div>
-  );
-}
-
 // ─── Composant principal ──────────────────────────────────────
 export default function LoginScreen() {
   const navigate = useNavigate();
@@ -85,23 +39,11 @@ export default function LoginScreen() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Vérification OTP (connexion + inscription)
-  const [otpCode, setOtpCode] = useState("");
-  const [otpError, setOtpError] = useState("");
-  const [otpLoading, setOtpLoading] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
-
-  // Mode connexion : "form" | "otp"
-  const [loginStep, setLoginStep] = useState("form");
-  // Stocke temporairement les infos de connexion pendant l'OTP
-  const pendingLogin = useRef(null);
-
   // Inscription
   const [registerStep, setRegisterStep] = useState(1);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [registerError, setRegisterError] = useState("");
-  const [newUserCode, setNewUserCode] = useState("");
   const [registerForm, setRegisterForm] = useState({
     prenom: "", nom: "", email: "", telephone: "",
     adresse: "", ville: "", codePostal: "", pays: "France",
@@ -110,17 +52,6 @@ export default function LoginScreen() {
 
   const inputClass = "w-full px-0 py-3 border-0 border-b-2 border-gray-300 focus:border-gray-900 focus:outline-none focus:ring-0 text-base bg-transparent transition-colors";
   const labelClass = "block text-gray-600 text-sm font-medium mb-1";
-
-  // ─── Cooldown renvoi ────────────────────────────────────────
-  const startResendCooldown = () => {
-    setResendCooldown(60);
-    const interval = setInterval(() => {
-      setResendCooldown((prev) => {
-        if (prev <= 1) { clearInterval(interval); return 0; }
-        return prev - 1;
-      });
-    }, 1000);
-  };
 
   // ═══════════════════════════════════════════════════════════
   // CONNEXION
@@ -133,63 +64,16 @@ export default function LoginScreen() {
 
     setIsLoading(true);
     try {
-      // 1. Vérifier que l'email + mot de passe sont corrects AVANT d'envoyer le code
-      const q = query(collection(db, "utilisateurs"), where("email", "==", email.trim().toLowerCase()));
-      const snap = await getDocs(q);
-      if (snap.empty) { setError("Aucun compte associé à cet email"); setIsLoading(false); return; }
-      const userDoc = snap.docs[0];
-      if (userDoc.data().password !== password) { setError("Mot de passe incorrect"); setIsLoading(false); return; }
-
-      // 2. Credentials OK → envoyer le code
-      const prenom = userDoc.data().prenom || "Client";
-      const result = await envoyerCodeVerification(email, prenom, "connexion");
-      if (!result.success) { setError(result.message); setIsLoading(false); return; }
-
-      // 3. Mémoriser les credentials pour après la vérification
-      pendingLogin.current = { email, password };
-      setOtpCode("");
-      setOtpError("");
-      setLoginStep("otp");
-      startResendCooldown();
+      const result = await loginByEmail(email, password);
+      if (result.success) {
+        navigate("/accueil");
+      } else {
+        setError(result.message || "Email ou mot de passe incorrect");
+      }
     } catch (err) {
       setError("Erreur lors de la connexion. Réessayez.");
     }
     setIsLoading(false);
-  };
-
-  const handleLoginOTPVerify = async () => {
-    if (otpCode.length < 6) { setOtpError("Entrez les 6 chiffres du code"); return; }
-    setOtpLoading(true);
-    setOtpError("");
-
-    const { email: loginEmail, password: loginPassword } = pendingLogin.current;
-    const check = await verifierCode(loginEmail, otpCode);
-
-    if (!check.success) {
-      setOtpError(check.message);
-      if (check.expired) setLoginStep("form");
-      setOtpLoading(false);
-      return;
-    }
-
-    // Code OK → finaliser la connexion
-    const result = await loginByEmail(loginEmail, loginPassword);
-    if (result.success) {
-      navigate("/accueil");
-    } else {
-      setOtpError("Erreur inattendue. Réessayez.");
-    }
-    setOtpLoading(false);
-  };
-
-  const handleLoginResend = async () => {
-    if (resendCooldown > 0) return;
-    setOtpError("");
-    const q = await getDocs(query(collection(db, "utilisateurs"), where("email", "==", pendingLogin.current.email.trim().toLowerCase())));
-    const prenom = q.empty ? "Client" : q.docs[0].data().prenom;
-    await envoyerCodeVerification(pendingLogin.current.email, prenom, "connexion");
-    setOtpCode("");
-    startResendCooldown();
   };
 
   // ═══════════════════════════════════════════════════════════
@@ -216,9 +100,9 @@ export default function LoginScreen() {
   const handleRegisterStep2 = async (e) => {
     e.preventDefault();
     setRegisterError("");
-    const { password, confirmPassword } = registerForm;
-    if (password.length < 4) { setRegisterError("Le mot de passe doit contenir au moins 4 caractères"); return; }
-    if (password !== confirmPassword) { setRegisterError("Les mots de passe ne correspondent pas"); return; }
+    const { password: pwd, confirmPassword } = registerForm;
+    if (pwd.length < 4) { setRegisterError("Le mot de passe doit contenir au moins 4 caractères"); return; }
+    if (pwd !== confirmPassword) { setRegisterError("Les mots de passe ne correspondent pas"); return; }
 
     setIsLoading(true);
     try {
@@ -227,36 +111,7 @@ export default function LoginScreen() {
       const snap = await getDocs(q);
       if (!snap.empty) { setRegisterError("Un compte existe déjà avec cet email"); setIsLoading(false); return; }
 
-      // Envoyer le code de vérification
-      const result = await envoyerCodeVerification(registerForm.email, registerForm.prenom, "inscription");
-      if (!result.success) { setRegisterError(result.message); setIsLoading(false); return; }
-
-      setOtpCode("");
-      setOtpError("");
-      startResendCooldown();
-      setRegisterStep(3); // → étape OTP
-    } catch (err) {
-      setRegisterError("Erreur. Réessayez.");
-    }
-    setIsLoading(false);
-  };
-
-  const handleRegisterOTPVerify = async () => {
-    if (otpCode.length < 6) { setOtpError("Entrez les 6 chiffres du code"); return; }
-    setOtpLoading(true);
-    setOtpError("");
-
-    // Vérifier le code
-    const check = await verifierCode(registerForm.email, otpCode);
-    if (!check.success) {
-      setOtpError(check.message);
-      if (check.expired) setRegisterStep(2);
-      setOtpLoading(false);
-      return;
-    }
-
-    // Code OK → créer le compte
-    try {
+      // Créer le compte directement
       const code = await genererCodeClient();
       const iban = genererIBAN();
       const carte = genererCarte();
@@ -286,21 +141,12 @@ export default function LoginScreen() {
         dateCreation: new Date().toISOString(),
       });
 
-      setNewUserCode(code);
-      setRegisterStep(4); // → succès
       console.log("✅ Compte créé:", code);
+      setRegisterStep(3); // → succès
     } catch (err) {
-      setOtpError("Erreur lors de la création du compte. Réessayez.");
+      setRegisterError("Erreur. Réessayez.");
     }
-    setOtpLoading(false);
-  };
-
-  const handleRegisterResend = async () => {
-    if (resendCooldown > 0) return;
-    setOtpError("");
-    await envoyerCodeVerification(registerForm.email, registerForm.prenom, "inscription");
-    setOtpCode("");
-    startResendCooldown();
+    setIsLoading(false);
   };
 
   const handleLoginAfterRegister = async () => {
@@ -310,68 +156,14 @@ export default function LoginScreen() {
 
   const resetToLogin = () => {
     setMode("login");
-    setLoginStep("form");
     setRegisterStep(1);
     setRegisterError("");
-    setOtpCode("");
-    setOtpError("");
     setRegisterForm({
       prenom: "", nom: "", email: "", telephone: "",
       adresse: "", ville: "", codePostal: "", pays: "France",
       password: "", confirmPassword: "",
     });
   };
-
-  // ═══════════════════════════════════════════════════════════
-  // RENDER : Bloc OTP réutilisable
-  // ═══════════════════════════════════════════════════════════
-  const renderOTPBlock = (emailCible, onVerify, onResend, onBack) => (
-    <div>
-      <button onClick={onBack} className="p-2 rounded-full hover:bg-gray-200 transition mb-4">
-        <ArrowLeft size={22} className="text-gray-700" />
-      </button>
-
-      <div className="flex flex-col items-center text-center mb-6">
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-          <ShieldCheck size={32} className="text-red-600" />
-        </div>
-        <h2 className="text-2xl font-bold text-gray-900">Vérification email</h2>
-        <p className="text-gray-500 text-sm mt-2">
-          Un code à 6 chiffres a été envoyé à
-        </p>
-        <p className="text-gray-800 font-semibold text-sm mt-1">{emailCible}</p>
-      </div>
-
-      <OTPInput value={otpCode} onChange={setOtpCode} />
-
-      {otpError && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-          <p className="text-red-600 text-sm text-center">{otpError}</p>
-        </div>
-      )}
-
-      <button
-        onClick={onVerify}
-        disabled={otpLoading || otpCode.length < 6}
-        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-lg py-4 rounded-full transition shadow-lg disabled:opacity-50 mb-4"
-      >
-        {otpLoading ? "Vérification..." : "Confirmer"}
-      </button>
-
-      <p className="text-gray-500 text-xs text-center mb-2">
-        Code valable <strong>10 minutes</strong>. Vérifiez vos spams.
-      </p>
-
-      <button
-        onClick={onResend}
-        disabled={resendCooldown > 0}
-        className="w-full flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-red-600 disabled:opacity-40 transition py-2"
-      >
-        <RefreshCw size={15} />
-        {resendCooldown > 0 ? `Renvoyer dans ${resendCooldown}s` : "Renvoyer le code"}
-      </button>
-    </div>
-  );
 
   // ═══════════════════════════════════════════════════════════
   // RENDER PRINCIPAL
@@ -389,8 +181,8 @@ export default function LoginScreen() {
       <div className="flex-1 px-4 py-6">
         <div className="max-w-xl mx-auto">
 
-          {/* ── CONNEXION : Formulaire ── */}
-          {mode === "login" && loginStep === "form" && (
+          {/* ── CONNEXION ── */}
+          {mode === "login" && (
             <>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">Connexion</h1>
               <p className="text-gray-500 text-sm mb-8">Accédez à votre espace client</p>
@@ -450,30 +242,19 @@ export default function LoginScreen() {
             </>
           )}
 
-          {/* ── CONNEXION : OTP ── */}
-          {mode === "login" && loginStep === "otp" && renderOTPBlock(
-            email,
-            handleLoginOTPVerify,
-            handleLoginResend,
-            () => { setLoginStep("form"); setOtpCode(""); setOtpError(""); }
-          )}
-
           {/* ── INSCRIPTION ── */}
           {mode === "register" && (
             <>
-              {/* Header inscription (steps 1, 2, 3) */}
-              {registerStep < 4 && (
+              {/* Header */}
+              {registerStep < 3 && (
                 <div className="flex items-center gap-3 mb-6">
-                  {registerStep < 3 && (
-                    <button onClick={() => registerStep === 1 ? resetToLogin() : setRegisterStep(1)}
-                      className="p-2 rounded-full hover:bg-gray-200 transition">
-                      <ArrowLeft size={22} className="text-gray-700" />
-                    </button>
-                  )}
+                  <button onClick={() => registerStep === 1 ? resetToLogin() : setRegisterStep(1)}
+                    className="p-2 rounded-full hover:bg-gray-200 transition">
+                    <ArrowLeft size={22} className="text-gray-700" />
+                  </button>
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">Ouvrir un compte</h1>
-                    {registerStep < 3 && <p className="text-sm text-gray-500">Étape {registerStep} sur 2</p>}
-                    {registerStep === 3 && <p className="text-sm text-gray-500">Vérification email</p>}
+                    <p className="text-sm text-gray-500">Étape {registerStep} sur 2</p>
                   </div>
                 </div>
               )}
@@ -567,9 +348,7 @@ export default function LoginScreen() {
                       <Lock size={20} className="text-blue-600 mt-0.5 shrink-0" />
                       <div>
                         <p className="text-blue-800 font-semibold text-sm">Choisissez votre mot de passe</p>
-                        <p className="text-blue-600 text-xs mt-1">
-                          Minimum 4 caractères. Après validation, un code sera envoyé à votre email pour confirmer votre compte.
-                        </p>
+                        <p className="text-blue-600 text-xs mt-1">Minimum 4 caractères.</p>
                       </div>
                     </div>
                   </div>
@@ -616,21 +395,13 @@ export default function LoginScreen() {
                   )}
                   <button type="submit" disabled={isLoading}
                     className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-lg py-4 rounded-full transition shadow-lg disabled:opacity-50">
-                    {isLoading ? "Envoi du code..." : "Créer mon compte"}
+                    {isLoading ? "Création en cours..." : "Créer mon compte"}
                   </button>
                 </form>
               )}
 
-              {/* ÉTAPE 3 : OTP inscription */}
-              {registerStep === 3 && renderOTPBlock(
-                registerForm.email,
-                handleRegisterOTPVerify,
-                handleRegisterResend,
-                () => { setRegisterStep(2); setOtpCode(""); setOtpError(""); }
-              )}
-
-              {/* ÉTAPE 4 : Succès */}
-              {registerStep === 4 && (
+              {/* ÉTAPE 3 : Succès */}
+              {registerStep === 3 && (
                 <div className="text-center py-6">
                   <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Check size={40} className="text-green-600" />
