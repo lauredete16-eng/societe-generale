@@ -12,7 +12,6 @@ export default function VirementPage() {
   const [virements, setVirements] = useState([]);
   const [isLoadingVirements, setIsLoadingVirements] = useState(false);
 
-  // ✅ FIX : parseFloat pour éviter le bug "solde insuffisant"
   const soldeCompte = parseFloat(currentUser?.solde) || 0;
   const numeroCompte = currentUser?.numeroCompte || '';
 
@@ -36,12 +35,12 @@ export default function VirementPage() {
     setIsLoadingVirements(false);
   };
 
-  // ─── Vérification automatique toutes les 5s ───────────────
+  // ─── Mise à jour de la progression toutes les 5s ─────────
   useEffect(() => {
     if (!currentUser?.numeroCompte) return;
     chargerVirements();
     const interval = setInterval(async () => {
-      const modifie = await VirementService.verifierEtMettreAJourVirements(currentUser.numeroCompte);
+      const modifie = await VirementService.mettreAJourProgression(currentUser.numeroCompte);
       if (modifie) chargerVirements();
     }, 5000);
     return () => clearInterval(interval);
@@ -56,21 +55,22 @@ export default function VirementPage() {
   // ─── Helpers statut ───────────────────────────────────────
   const getStatutLibelle = (statut, pourcentage) => {
     switch (statut) {
-      case STATUT_VIREMENT.EN_ATTENTE:   return { label: `En attente (${pourcentage}%)`,  color: 'blue',   icon: 'Clock' };
-      case STATUT_VIREMENT.EN_COURS:     return { label: `En cours (${pourcentage}%)`,    color: 'orange', icon: 'AlertCircle' };
-      case STATUT_VIREMENT.VALIDATION:   return { label: `Validation (${pourcentage}%)`,  color: 'yellow', icon: 'AlertTriangle' };
-      case STATUT_VIREMENT.BLOQUE:       return { label: '🚫 BLOQUÉ (98%)',               color: 'red',    icon: 'XCircle' };
-      case STATUT_VIREMENT.ANNULE:       return { label: 'Annulé',                        color: 'gray',   icon: 'XCircle' };
-      default:                           return { label: 'Inconnu',                       color: 'gray',   icon: 'AlertCircle' };
+      case STATUT_VIREMENT.EN_ATTENTE: return { label: `En attente (${pourcentage}%)`,  color: 'blue',   icon: 'Clock' };
+      case STATUT_VIREMENT.EN_COURS:   return { label: `En cours (${pourcentage}%)`,    color: 'orange', icon: 'AlertCircle' };
+      case STATUT_VIREMENT.VALIDATION: return { label: `Validation (${pourcentage}%)`,  color: 'yellow', icon: 'AlertTriangle' };
+      case STATUT_VIREMENT.ANNULE:     return { label: 'Annulé',                        color: 'gray',   icon: 'XCircle' };
+      default:                         return { label: 'Inconnu',                       color: 'gray',   icon: 'AlertCircle' };
     }
   };
 
   const getIconComponent = (iconName) => ({ AlertCircle, Clock, AlertTriangle, XCircle, CheckCircle })[iconName] || AlertCircle;
 
   const getStatutClasses = (color) => ({
-    blue: 'bg-blue-100 text-blue-700', orange: 'bg-orange-100 text-orange-700',
-    yellow: 'bg-yellow-100 text-yellow-700', red: 'bg-red-100 text-red-700',
-    green: 'bg-green-100 text-green-700', gray: 'bg-gray-100 text-gray-700'
+    blue:   'bg-blue-100 text-blue-700',
+    orange: 'bg-orange-100 text-orange-700',
+    yellow: 'bg-yellow-100 text-yellow-700',
+    green:  'bg-green-100 text-green-700',
+    gray:   'bg-gray-100 text-gray-700'
   })[color] || 'bg-gray-100 text-gray-700';
 
   // ─── Actions bénéficiaires ────────────────────────────────
@@ -95,18 +95,10 @@ export default function VirementPage() {
       return;
     }
 
-    // ✅ FIX PRINCIPAL : parseFloat des deux côtés pour éviter comparaison string/number
     const soldeReel = parseFloat(currentUser?.solde) || 0;
-    console.log('💰 Solde réel:', soldeReel, '| Type:', typeof soldeReel);
-    console.log('💸 Montant:', montantVirement, '| Type:', typeof montantVirement);
 
     if (montantVirement > soldeReel) {
       alert(`Solde insuffisant. Votre solde : ${soldeReel.toFixed(2)} € — Montant demandé : ${montantVirement.toFixed(2)} €`);
-      return;
-    }
-
-    if (currentUser?.compteBloque) {
-      alert('Votre compte est bloqué. Veuillez contacter le service client.');
       return;
     }
 
@@ -124,7 +116,6 @@ export default function VirementPage() {
         return;
       }
 
-      // Déduire le montant du solde
       const newSolde = soldeReel - montantVirement;
       await setCurrentUser({ ...currentUser, solde: newSolde });
 
@@ -139,7 +130,6 @@ export default function VirementPage() {
   // ─── Annuler / Supprimer ──────────────────────────────────
   const annulerVirement = async (virementId) => {
     const virement = virements.find(v => v.id === virementId);
-    if (virement.statut === STATUT_VIREMENT.BLOQUE) { alert('Virement bloqué. Contactez le service client.'); return; }
     if (virement.statut === STATUT_VIREMENT.ANNULE) { alert('Virement déjà annulé.'); return; }
     if (window.confirm('Annuler ce virement ?')) {
       await VirementService.annulerVirement(virementId, virement);
@@ -151,7 +141,7 @@ export default function VirementPage() {
   };
 
   const supprimerVirement = async (virementId) => {
-    if (window.confirm('Supprimer ce virement de l\'historique ?')) {
+    if (window.confirm("Supprimer ce virement de l'historique ?")) {
       await VirementService.supprimerVirement(virementId);
       await chargerVirements();
     }
@@ -162,8 +152,6 @@ export default function VirementPage() {
 
   // ─── Télécharger reçu ────────────────────────────────────
   const telechargerRecu = (virement) => {
-    const isBloque = virement.statut === STATUT_VIREMENT.BLOQUE;
-    const montantDeblocage = virement.montantDeblocage || 0;
     const recuHTML = `<!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><title>Reçu Virement ${virement.id}</title>
 <style>
@@ -174,11 +162,9 @@ export default function VirementPage() {
   .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
   .label{color:#666;font-weight:600} .value{font-weight:bold}
   .montant{font-size:32px;color:#00a651;text-align:center;padding:20px;background:#f0f9f4;border-radius:8px;margin:20px 0}
-  ${isBloque ? '.alerte{background:#fee;border:2px solid #e60028;border-radius:8px;padding:20px;margin-bottom:20px;text-align:center}.alerte h2{color:#e60028}.alerte .deblocage{font-size:32px;font-weight:bold;color:#e60028}' : ''}
   .footer{margin-top:30px;text-align:center;color:#666;font-size:12px;border-top:2px solid #f0f0f0;padding-top:20px}
 </style></head><body><div class="container">
   <div class="header"><h1>🏦 SOCIÉTÉ GÉNÉRALE</h1><p>Reçu de Virement — N° ${virement.id}</p></div>
-  ${isBloque ? `<div class="alerte"><h2>⚠️ VIREMENT BLOQUÉ</h2><div class="deblocage">${montantDeblocage.toFixed(2)} €</div><p>Montant requis pour débloquer</p></div>` : ''}
   <div class="montant">${virement.montant.toFixed(2)} ${virement.devise}</div>
   <div class="row"><span class="label">Expéditeur</span><span class="value">${virement.expediteurNom || ''}</span></div>
   <div class="row"><span class="label">Compte</span><span class="value">${virement.numeroCompte}</span></div>
@@ -186,7 +172,6 @@ export default function VirementPage() {
   <div class="row"><span class="label">IBAN</span><span class="value">${virement.beneficiaire.iban}</span></div>
   <div class="row"><span class="label">BIC</span><span class="value">${virement.beneficiaire.bic || 'N/A'}</span></div>
   <div class="row"><span class="label">Date création</span><span class="value">${new Date(virement.dateCreation).toLocaleString('fr-FR')}</span></div>
-  ${isBloque ? `<div class="row"><span class="label">Date blocage</span><span class="value">${new Date(virement.dateBlocagePrevue).toLocaleString('fr-FR')}</span></div>` : ''}
   <div class="footer"><p><strong>SOCIÉTÉ GÉNÉRALE</strong> — 29 Boulevard Haussmann, 75009 Paris</p><p>Généré le ${new Date().toLocaleString('fr-FR')}</p></div>
 </div></body></html>`;
     const blob = new Blob([recuHTML], { type: 'text/html' });
@@ -297,9 +282,9 @@ export default function VirementPage() {
                 {virements.map((virement) => {
                   const statutInfo = getStatutLibelle(virement.statut, virement.pourcentageProgression);
                   const StatusIcon = getIconComponent(statutInfo.icon);
-                  const peutAnnuler = ![STATUT_VIREMENT.ANNULE, STATUT_VIREMENT.BLOQUE].includes(virement.statut);
+                  const peutAnnuler = virement.statut !== STATUT_VIREMENT.ANNULE;
                   return (
-                    <div key={virement.id} className={`border-2 rounded-lg p-4 hover:shadow-md transition ${virement.statut === STATUT_VIREMENT.BLOQUE ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}>
+                    <div key={virement.id} className="border-2 rounded-lg p-4 hover:shadow-md transition border-gray-200">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="font-semibold text-base mb-1">{virement.beneficiaire.prenom} {virement.beneficiaire.nom}</div>
@@ -314,7 +299,7 @@ export default function VirementPage() {
                             <span>Progression</span><span>{virement.pourcentageProgression}%</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div className={`h-2 rounded-full transition-all duration-500 ${virement.statut === STATUT_VIREMENT.BLOQUE ? 'bg-red-600' : virement.statut === STATUT_VIREMENT.VALIDATION ? 'bg-yellow-600' : virement.statut === STATUT_VIREMENT.EN_COURS ? 'bg-orange-600' : 'bg-blue-600'}`}
+                            <div className={`h-2 rounded-full transition-all duration-500 ${virement.statut === STATUT_VIREMENT.VALIDATION ? 'bg-yellow-600' : virement.statut === STATUT_VIREMENT.EN_COURS ? 'bg-orange-600' : 'bg-blue-600'}`}
                               style={{ width: `${virement.pourcentageProgression}%` }}></div>
                           </div>
                         </div>
@@ -333,13 +318,6 @@ export default function VirementPage() {
                           <button onClick={() => supprimerVirement(virement.id)} className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition">Supprimer</button>
                         </div>
                       </div>
-                      {virement.statut === STATUT_VIREMENT.BLOQUE && (
-                        <div className="mt-3 p-3 bg-red-100 border border-red-300 rounded text-xs">
-                          <p className="font-semibold text-red-800 mb-1">⚠️ Virement bloqué</p>
-                          <p className="text-red-700">Délai écoulé. Contactez le service client.</p>
-                          <p className="text-red-800 font-bold mt-2">Montant de déblocage : {virement.montantDeblocage?.toFixed(2) || '50.00'} €</p>
-                        </div>
-                      )}
                     </div>
                   );
                 })}
