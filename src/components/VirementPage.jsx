@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Power, ChevronDown, ChevronUp, Plus, Trash2, CheckCircle, Loader, Clock, History, XCircle, AlertCircle, AlertTriangle, Download } from 'lucide-react';
+import { Power, ChevronDown, ChevronUp, Plus, Trash2, CheckCircle, Loader, History, Download } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { VirementService, STATUT_VIREMENT } from '../services/VirementService';
 
@@ -35,15 +35,10 @@ export default function VirementPage() {
     setIsLoadingVirements(false);
   };
 
-  // ─── Mise à jour de la progression toutes les 5s ─────────
+  // ─── Chargement initial uniquement ───────────────────────
   useEffect(() => {
     if (!currentUser?.numeroCompte) return;
     chargerVirements();
-    const interval = setInterval(async () => {
-      const modifie = await VirementService.mettreAJourProgression(currentUser.numeroCompte);
-      if (modifie) chargerVirements();
-    }, 5000);
-    return () => clearInterval(interval);
   }, [currentUser?.numeroCompte]);
 
   // ─── Navigation avec loader ───────────────────────────────
@@ -52,26 +47,7 @@ export default function VirementPage() {
     setTimeout(() => setCurrentPage(page), 1500);
   };
 
-  // ─── Helpers statut ───────────────────────────────────────
-  const getStatutLibelle = (statut, pourcentage) => {
-    switch (statut) {
-      case STATUT_VIREMENT.EN_ATTENTE: return { label: `En attente (${pourcentage}%)`,  color: 'blue',   icon: 'Clock' };
-      case STATUT_VIREMENT.EN_COURS:   return { label: `En cours (${pourcentage}%)`,    color: 'orange', icon: 'AlertCircle' };
-      case STATUT_VIREMENT.VALIDATION: return { label: `Validation (${pourcentage}%)`,  color: 'yellow', icon: 'AlertTriangle' };
-      case STATUT_VIREMENT.ANNULE:     return { label: 'Annulé',                        color: 'gray',   icon: 'XCircle' };
-      default:                         return { label: 'Inconnu',                       color: 'gray',   icon: 'AlertCircle' };
-    }
-  };
 
-  const getIconComponent = (iconName) => ({ AlertCircle, Clock, AlertTriangle, XCircle, CheckCircle })[iconName] || AlertCircle;
-
-  const getStatutClasses = (color) => ({
-    blue:   'bg-blue-100 text-blue-700',
-    orange: 'bg-orange-100 text-orange-700',
-    yellow: 'bg-yellow-100 text-yellow-700',
-    green:  'bg-green-100 text-green-700',
-    gray:   'bg-gray-100 text-gray-700'
-  })[color] || 'bg-gray-100 text-gray-700';
 
   // ─── Actions bénéficiaires ────────────────────────────────
   const deleteBeneficiary = (id, e) => { e.stopPropagation(); setBeneficiaries(beneficiaries.filter(b => b.id !== id)); };
@@ -280,42 +256,21 @@ export default function VirementPage() {
             ) : (
               <div className="space-y-3">
                 {virements.map((virement) => {
-                  const statutInfo = getStatutLibelle(virement.statut, virement.pourcentageProgression);
-                  const StatusIcon = getIconComponent(statutInfo.icon);
-                  const peutAnnuler = virement.statut !== STATUT_VIREMENT.ANNULE;
                   return (
                     <div key={virement.id} className="border-2 rounded-lg p-4 hover:shadow-md transition border-gray-200">
-                      <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="font-semibold text-base mb-1">{virement.beneficiaire.prenom} {virement.beneficiaire.nom}</div>
-                          <div className="text-gray-600 text-xs mb-1">{virement.beneficiaire.iban}</div>
                           <div className="text-gray-500 text-xs">{new Date(virement.dateCreation).toLocaleDateString('fr-FR')} à {new Date(virement.dateCreation).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</div>
                         </div>
-                        <div className="font-bold text-xl text-emerald-600">{virement.montant.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €</div>
-                      </div>
-                      {virement.statut !== STATUT_VIREMENT.ANNULE && (
-                        <div className="mb-3">
-                          <div className="flex justify-between text-xs text-gray-600 mb-1">
-                            <span>Progression</span><span>{virement.pourcentageProgression}%</span>
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="font-bold text-xl text-emerald-600">{virement.montant.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €</div>
+                          <div className="flex gap-2">
+                            <button onClick={() => telechargerRecu(virement)} className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition flex items-center gap-1">
+                              <Download className="w-3 h-3" />Reçu
+                            </button>
+                            <button onClick={() => supprimerVirement(virement.id)} className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition">Supprimer</button>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div className={`h-2 rounded-full transition-all duration-500 ${virement.statut === STATUT_VIREMENT.VALIDATION ? 'bg-yellow-600' : virement.statut === STATUT_VIREMENT.EN_COURS ? 'bg-orange-600' : 'bg-blue-600'}`}
-                              style={{ width: `${virement.pourcentageProgression}%` }}></div>
-                          </div>
-                        </div>
-                      )}
-                      <div className="flex items-center justify-between">
-                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${getStatutClasses(statutInfo.color)}`}>
-                          <StatusIcon className="w-4 h-4" />{statutInfo.label}
-                        </span>
-                        <div className="flex gap-2">
-                          <button onClick={() => telechargerRecu(virement)} className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition flex items-center gap-1">
-                            <Download className="w-3 h-3" />Reçu
-                          </button>
-                          {peutAnnuler && (
-                            <button onClick={() => annulerVirement(virement.id)} className="px-3 py-1 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 transition">Annuler</button>
-                          )}
-                          <button onClick={() => supprimerVirement(virement.id)} className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition">Supprimer</button>
                         </div>
                       </div>
                     </div>
