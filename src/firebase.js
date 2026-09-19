@@ -2,18 +2,20 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBD5hyUtfswOUH-VPTtR8USq4_aziQ7LWI",
-  authDomain: "projet-sg-7e34e.firebaseapp.com",
-  projectId: "projet-sg-7e34e",
-  storageBucket: "projet-sg-7e34e.firebasestorage.app",
-  messagingSenderId: "283842651601",
-  appId: "1:283842651601:web:66ced1765a4e13499bacf0",
-  measurementId: "G-F26D56P40V"
+  apiKey: "AIzaSyBw4WB2yWSJg4EOF-sQksL5--04-2roZCI",
+  authDomain: "societe1-8ffe6.firebaseapp.com",
+  projectId: "societe1-8ffe6",
+  storageBucket: "societe1-8ffe6.firebasestorage.app",
+  messagingSenderId: "207310869055",
+  appId: "1:207310869055:web:e825a0744117d1f4949e8a",
+  measurementId: "G-MX5VLZH8C4"
 };
 
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const analytics = getAnalytics(app);
