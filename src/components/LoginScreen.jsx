@@ -236,7 +236,7 @@ export default function LoginScreen() {
 
                 <button type="button" onClick={() => setMode("register")}
                   className="w-full bg-white hover:bg-gray-50 text-red-600 font-bold text-base py-4 rounded-full transition border-2 border-red-600">
-                  Ouvrir un compte
+                  Ouvrir mon compte
                 </button>
               </form>
             </>
