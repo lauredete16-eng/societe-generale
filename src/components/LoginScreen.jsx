@@ -493,19 +493,17 @@ export default function LoginScreen() {
       <main className="flex-1">
         <div className="max-w-xl mx-auto px-5 py-12">
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            Accéder à votre espace
+          <h1 className="text-xl font-bold text-gray-700 mb-3">
+            connexion à votre Espace Client Particuliers
           </h1>
 
-          <p className="text-gray-600 mb-8">
-            Connectez-vous à votre espace personnel.
-          </p>
+          
 
           {step === 1 ? (
             <form onSubmit={handleIdentifiantSubmit}>
 
               <label className="block text-sm font-semibold text-gray-800 mb-2">
-                Saisissez votre identifiant
+                Saisissez votre identifiant client
               </label>
 
               <div className="relative">
@@ -645,20 +643,17 @@ export default function LoginScreen() {
           <div className="mt-12 space-y-8">
 
             <div>
-              <h2 className="font-bold text-gray-900 mb-3">
+              <h2 className="font-bold text-gray-700 mb-3">
                 Où trouver mon Identifiant Client ?
               </h2>
 
-              <button
-                type="button"
-                className="text-sm text-red-600 font-semibold hover:underline"
-              >
-                En savoir plus
-              </button>
+              <h3 className="text-sm text-gray-600 font-semibold">
+  Votre Identifiant Client vous a été communiqué lors de la souscription à la Banque à Distance. Il est également indiqué sur vos relevés de comptes.
+</h3>
             </div>
 
             <div>
-              <h2 className="font-bold text-gray-900 mb-3">
+              <h2 className="font-bold text-gray-700 mb-3">
                 Identifiant Client ou Code Secret inconnus ?
               </h2>
 
@@ -666,14 +661,14 @@ export default function LoginScreen() {
 
                 <button
                   type="button"
-                  className="text-left text-sm text-red-600 font-semibold hover:underline"
+                  className="text-left text-sm text-gray-600 font-semibold hover:underline"
                 >
                   Je souhaite obtenir mon Identifiant Client
                 </button>
 
                 <button
                   type="button"
-                  className="text-left text-sm text-red-600 font-semibold hover:underline"
+                  className="text-left text-sm text-gray-600 font-semibold hover:underline"
                 >
                   Je ne connais pas mon Code Secret
                 </button>
@@ -682,7 +677,7 @@ export default function LoginScreen() {
             </div>
 
             <div>
-              <h2 className="font-bold text-gray-900 mb-3">
+              <h2 className="font-bold text-gray-700 mb-3">
                 Nos autres Espaces Client
               </h2>
 
@@ -690,14 +685,14 @@ export default function LoginScreen() {
 
                 <button
                   type="button"
-                  className="text-left text-sm text-red-600 font-semibold hover:underline"
+                  className="text-left text-sm text-gray-600 font-semibold hover:underline"
                 >
                   Espace Client Professionnels
                 </button>
 
                 <button
                   type="button"
-                  className="text-left text-sm text-red-600 font-semibold hover:underline"
+                  className="text-left text-sm text-gray-600 font-semibold hover:underline"
                 >
                   Espace Client Entreprises
                 </button>
@@ -706,7 +701,7 @@ export default function LoginScreen() {
             </div>
 
             <div>
-              <h2 className="font-bold text-gray-900 mb-3">
+              <h2 className="font-bold text-gray-700 mb-3">
                 Liens utiles
               </h2>
 
@@ -714,21 +709,21 @@ export default function LoginScreen() {
 
                 <button
                   type="button"
-                  className="text-left text-sm text-red-600 font-semibold hover:underline"
+                  className="text-left text-sm text-gray-600 font-semibold hover:underline"
                 >
                   Urgences carte bancaire
                 </button>
 
                 <button
                   type="button"
-                  className="text-left text-sm text-red-600 font-semibold hover:underline"
+                  className="text-left text-sm text-gray-600 font-semibold hover:underline"
                 >
                   Faire opposition à votre carte bancaire
                 </button>
 
                 <button
                   type="button"
-                  className="text-left text-sm text-red-600 font-semibold hover:underline"
+                  className="text-left text-sm text-gray-600 font-semibold hover:underline"
                 >
                   Verrouiller votre carte bancaire
                 </button>
