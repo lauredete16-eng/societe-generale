@@ -1,8 +1,18 @@
-// AuthContext.jsx - VERSION FIREBASE + LOGIN PAR EMAIL
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { db } from "../firebase.js";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { getUser, loginUser, updateSolde, updateUser } from "../services/UserService.js";
+// AuthContext.jsx - FIREBASE + IDENTIFIANT CLIENT
+
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
+
+import {
+  getUser,
+  loginUser,
+  updateSolde,
+  updateUser,
+} from "../services/UserService.js";
 
 export const AuthContext = createContext();
 
@@ -17,108 +27,187 @@ export function AuthProvider({ children }) {
     loadCurrentUser();
   }, []);
 
+  // ─────────────────────────────────────────────
+  // RESTAURER LA SESSION
+  // ─────────────────────────────────────────────
   const loadCurrentUser = async () => {
     try {
       const data = sessionStorage.getItem(USER_STORAGE_KEY);
-      if (data) {
-        const { code } = JSON.parse(data);
-        const freshUser = await getUser(code);
-        if (freshUser) {
-          setCurrentUserState(freshUser);
-          setIsLoggedIn(true);
-          console.log("✅ Session restaurée:", freshUser.nom);
-        } else {
-          sessionStorage.removeItem(USER_STORAGE_KEY);
-        }
+
+      if (!data) {
+        setLoading(false);
+        return;
+      }
+
+      const { code } = JSON.parse(data);
+
+      if (!code) {
+        sessionStorage.removeItem(USER_STORAGE_KEY);
+        setLoading(false);
+        return;
+      }
+
+      const freshUser = await getUser(code);
+
+      if (freshUser) {
+        const userWithCredentials = {
+          ...freshUser,
+          code,
+          username: code,
+        };
+
+        setCurrentUserState(userWithCredentials);
+        setIsLoggedIn(true);
+
+        console.log("✅ Session restaurée :", code);
+      } else {
+        sessionStorage.removeItem(USER_STORAGE_KEY);
       }
     } catch (error) {
-      console.log("ℹ️ Aucune session active");
+      console.error("❌ Erreur restauration session :", error);
+      sessionStorage.removeItem(USER_STORAGE_KEY);
     } finally {
       setLoading(false);
     }
   };
 
+  // ─────────────────────────────────────────────
+  // SAUVEGARDER LA SESSION
+  // ─────────────────────────────────────────────
   const saveSession = (code) => {
     try {
-      sessionStorage.setItem(USER_STORAGE_KEY, JSON.stringify({ code }));
+      sessionStorage.setItem(
+        USER_STORAGE_KEY,
+        JSON.stringify({ code })
+      );
     } catch (error) {
-      console.error("❌ Erreur sauvegarde session:", error);
+      console.error("❌ Erreur sauvegarde session :", error);
     }
   };
 
-  // Connexion par code client
+  // ─────────────────────────────────────────────
+  // CONNEXION IDENTIFIANT CLIENT + CODE SECRET
+  // ─────────────────────────────────────────────
   const login = async (code, password) => {
-    console.log("🔐 Connexion par code:", code);
-    const user = await loginUser(code, password);
-    if (!user) return { success: false };
-    const userWithCredentials = { ...user, code, username: code };
-    setCurrentUserState(userWithCredentials);
-    setIsLoggedIn(true);
-    saveSession(code);
-    console.log("✅ Connexion réussie:", user.nom);
-    return { success: true, user: userWithCredentials };
-  };
-
-  // Connexion par email + mot de passe
-  const loginByEmail = async (email, password) => {
-    console.log("🔐 Connexion par email:", email);
     try {
-      const q = query(
-        collection(db, "utilisateurs"),
-        where("email", "==", email.trim().toLowerCase())
+      const clientCode = String(code || "").trim();
+      const secret = String(password || "");
+
+      if (!clientCode || !secret) {
+        return {
+          success: false,
+          message:
+            "Veuillez saisir votre Identifiant Client et votre Code Secret.",
+        };
+      }
+
+      console.log(
+        "🔐 Connexion avec Identifiant Client :",
+        clientCode
       );
-      const snap = await getDocs(q);
 
-      if (snap.empty) {
-        return { success: false, message: "Aucun compte associé à cet email" };
+      const user = await loginUser(clientCode, secret);
+
+      if (!user) {
+        return {
+          success: false,
+          message:
+            "Identifiant Client ou Code Secret incorrect.",
+        };
       }
 
-      const userDoc = snap.docs[0];
-      const user = { ...userDoc.data(), code: userDoc.id };
+      const userWithCredentials = {
+        ...user,
+        code: clientCode,
+        username: clientCode,
+      };
 
-      if (user.password !== password) {
-        return { success: false, message: "Mot de passe incorrect" };
-      }
-
-      const userWithCredentials = { ...user, username: user.code };
       setCurrentUserState(userWithCredentials);
       setIsLoggedIn(true);
-      saveSession(user.code);
 
-      console.log("✅ Connexion par email réussie:", user.nom);
-      return { success: true, user: userWithCredentials };
+      saveSession(clientCode);
+
+      console.log("✅ Connexion réussie :", clientCode);
+
+      return {
+        success: true,
+        user: userWithCredentials,
+      };
     } catch (error) {
-      console.error("❌ Erreur loginByEmail:", error);
-      return { success: false, message: "Erreur de connexion, réessayez" };
+      console.error("❌ Erreur connexion :", error);
+
+      return {
+        success: false,
+        message:
+          "Erreur lors de la connexion. Veuillez réessayer.",
+      };
     }
   };
 
+  // ─────────────────────────────────────────────
+  // DÉCONNEXION
+  // ─────────────────────────────────────────────
   const logout = () => {
     sessionStorage.removeItem(USER_STORAGE_KEY);
+
     setCurrentUserState(null);
     setIsLoggedIn(false);
+
     console.log("✅ Déconnexion réussie");
   };
 
+  // ─────────────────────────────────────────────
+  // MODIFIER L'UTILISATEUR
+  // ─────────────────────────────────────────────
   const setCurrentUser = async (updatedUserData) => {
-    setCurrentUserState(updatedUserData);
-    if (updatedUserData.code) {
-      await updateSolde(updatedUserData.code, updatedUserData.solde);
-      const { code, username, ...firestoreData } = updatedUserData;
-      await updateUser(updatedUserData.code, firestoreData);
+    try {
+      setCurrentUserState(updatedUserData);
+
+      if (!updatedUserData?.code) {
+        return;
+      }
+
+      if (
+        updatedUserData.solde !== undefined &&
+        updatedUserData.solde !== null
+      ) {
+        await updateSolde(
+          updatedUserData.code,
+          updatedUserData.solde
+        );
+      }
+
+      const {
+        code,
+        username,
+        ...firestoreData
+      } = updatedUserData;
+
+      await updateUser(
+        updatedUserData.code,
+        firestoreData
+      );
+
+      saveSession(updatedUserData.code);
+    } catch (error) {
+      console.error(
+        "❌ Erreur mise à jour utilisateur :",
+        error
+      );
     }
   };
 
   return (
-    <AuthContext.Provider value={{
-      isLoggedIn,
-      currentUser,
-      setCurrentUser,
-      loading,
-      login,
-      loginByEmail,
-      logout,
-    }}>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        currentUser,
+        setCurrentUser,
+        loading,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
